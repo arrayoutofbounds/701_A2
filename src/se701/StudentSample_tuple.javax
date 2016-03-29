@@ -1,0 +1,18 @@
+package se701;
+
+public class StudentSample {
+
+	public static void main(String[] args) { 
+		int square, cube;
+		square, cube = sampleMethod(3);
+		System.out.println("Square is: " + square); 
+		System.out.println("Cube is: " + cube); 
+	} 
+
+	public static int, int sampleMethod(int value) { 
+		int square = value * value; 
+		int cube = square * value; 
+		return square, cube; 
+	} 
+
+}

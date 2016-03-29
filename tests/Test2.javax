@@ -1,0 +1,8 @@
+public class Test2 {
+	public void foo(boolean x) {
+		b = 123;    // ERROR: out of scope
+	}
+	public void bar() {
+		int b = 456;
+	}
+}
