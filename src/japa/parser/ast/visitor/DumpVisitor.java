@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 Júlio Vilmar Gesser.
+ * Copyright (C) 2007 Jï¿½lio Vilmar Gesser.
  * 
  * This file is part of Java 1.5 parser and Abstract Syntax Tree.
  *
@@ -103,6 +103,8 @@ import japa.parser.ast.stmt.ThrowStmt;
 import japa.parser.ast.stmt.TryStmt;
 import japa.parser.ast.stmt.TypeDeclarationStmt;
 import japa.parser.ast.stmt.WhileStmt;
+import japa.parser.ast.stmt.YieldBlockStmt;
+import japa.parser.ast.stmt.YieldStmt;
 import japa.parser.ast.type.ClassOrInterfaceType;
 import japa.parser.ast.type.PrimitiveType;
 import japa.parser.ast.type.ReferenceType;
@@ -120,6 +122,7 @@ import java.util.List;
 public final class DumpVisitor implements VoidVisitor<Object> {
 
     private final SourcePrinter printer = new SourcePrinter();
+    private String yield = "";
 
     public String getSource() {
         return printer.getSource();
@@ -1136,6 +1139,8 @@ public final class DumpVisitor implements VoidVisitor<Object> {
         }
         printer.print(";");
     }
+    
+    
 
     public void visit(DoStmt n, Object arg) {
         printer.print("do ");
@@ -1297,4 +1302,23 @@ public final class DumpVisitor implements VoidVisitor<Object> {
         printer.print(n.getContent());
         printer.printLn("*/");
     }
+
+	@Override
+	public void visit(YieldBlockStmt n, Object arg) {
+        if (n.getStmts() != null) {
+            for (Statement s : n.getStmts()) {
+                s.accept(this, arg);
+                yield = yield + s.toString();
+            }
+        }
+
+		
+	}
+
+	@Override
+	public void visit(YieldStmt n, Object arg) {
+		// TODO Auto-generated method stub
+		
+		 printer.printLn(yield);
+	}
 }

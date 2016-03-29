@@ -37,9 +37,9 @@ public class A2MainRunner {
 			A2Compiler.compile(new File("src"+System.getProperty("file.separator")+"se701"+System.getProperty("file.separator")+"StudentSample.javax"));
 			System.out.println("src/se701.StudentSample compiled correctly");
 		} catch (ParseException e) {
-			System.err.println("Sample file should not have any errors! ");
+			System.err.println("Sample file should not have any errors! p ");
 		} catch (A2SemanticsException e) {
-			System.err.println("Sample file should not have any errors! ");
+			System.err.println("Sample file should not have any errors! s");
 		}  catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}

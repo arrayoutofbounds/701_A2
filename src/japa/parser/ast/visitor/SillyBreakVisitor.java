@@ -103,6 +103,8 @@ import japa.parser.ast.stmt.ThrowStmt;
 import japa.parser.ast.stmt.TryStmt;
 import japa.parser.ast.stmt.TypeDeclarationStmt;
 import japa.parser.ast.stmt.WhileStmt;
+import japa.parser.ast.stmt.YieldBlockStmt;
+import japa.parser.ast.stmt.YieldStmt;
 import japa.parser.ast.type.ClassOrInterfaceType;
 import japa.parser.ast.type.PrimitiveType;
 import japa.parser.ast.type.ReferenceType;
@@ -1303,4 +1305,16 @@ public final class SillyBreakVisitor implements VoidVisitor<Object> {
         printer.print(n.getContent());
         printer.printLn("*/");
     }
+
+	@Override
+	public void visit(YieldBlockStmt n, Object arg) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(YieldStmt n, Object arg) {
+		// TODO Auto-generated method stub
+		
+	}
 }

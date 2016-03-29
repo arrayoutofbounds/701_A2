@@ -2375,9 +2375,12 @@ Statement Statement():
 	|
 	  ret = Block()
 	|
+	  LOOKAHEAD(5)
+	  ret = StatementExpression()
+	|
 	  ret = EmptyStatement()
 	|
-	  ret = StatementExpression()
+	  ret = YieldBlock() 
 	|
 	  ret = SwitchStatement()
 	|
@@ -2400,8 +2403,21 @@ Statement Statement():
 	  ret = SynchronizedStatement()
 	|
 	  ret = TryStatement()
+	|
+	  ret = YieldStatment()
   )
   { return ret; }
+}
+
+YieldStmt YieldStatment() :
+{
+  	String id = null;
+	int line;
+	int column;
+}
+{
+  < YIELD > {line=token.beginLine; column=token.beginColumn;} [ <IDENTIFIER> { id = token.image; } ]  <SEMICOLON >
+  { return new YieldStmt(line, column, id); }
 }
 
 AssertStmt AssertStatement():
@@ -2441,6 +2457,23 @@ BlockStmt Block():
   	stmts = Statements() 
   "}" {endLine=token.beginLine; endColumn=token.beginColumn;}
   { return new BlockStmt(beginLine, beginColumn, endLine, endColumn, stmts); }
+}
+
+YieldBlockStmt YieldBlock():
+{
+	List stmts;
+	int beginLine;
+	int beginColumn;
+	int endLine;
+	int endColumn;
+	Expression methodCall;
+	System.out.println("in yield block");
+}
+{
+  methodCall = PrimaryPrefix()  "{" {beginLine=token.beginLine; beginColumn=token.beginColumn;} 
+  	stmts = Statements() 
+  "}"<SEMICOLON > {endLine=token.beginLine; endColumn=token.beginColumn;} 
+  { return new YieldBlockStmt(beginLine, beginColumn, endLine, endColumn, stmts,methodCall); }
 }
 
 /*

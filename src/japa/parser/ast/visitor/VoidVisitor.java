@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 Júlio Vilmar Gesser.
+ * Copyright (C) 2007 Jï¿½lio Vilmar Gesser.
  * 
  * This file is part of Java 1.5 parser and Abstract Syntax Tree.
  *
@@ -97,6 +97,8 @@ import japa.parser.ast.stmt.ThrowStmt;
 import japa.parser.ast.stmt.TryStmt;
 import japa.parser.ast.stmt.TypeDeclarationStmt;
 import japa.parser.ast.stmt.WhileStmt;
+import japa.parser.ast.stmt.YieldBlockStmt;
+import japa.parser.ast.stmt.YieldStmt;
 import japa.parser.ast.type.ClassOrInterfaceType;
 import japa.parser.ast.type.PrimitiveType;
 import japa.parser.ast.type.ReferenceType;
@@ -245,6 +247,10 @@ public interface VoidVisitor<A> {
     public void visit(AssertStmt n, A arg);
 
     public void visit(BlockStmt n, A arg);
+    
+    public void visit(YieldBlockStmt n, A arg);
+    
+    public void visit(YieldStmt n, A arg);
 
     public void visit(LabeledStmt n, A arg);
 
