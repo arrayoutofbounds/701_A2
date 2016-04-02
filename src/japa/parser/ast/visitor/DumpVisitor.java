@@ -865,8 +865,10 @@ public final class DumpVisitor implements VoidVisitor<Object> {
         printer.print("(");
         if (n.getParameters() != null) {
         	System.out.println(n.getName());
-        	if(!n.getName().toString().equals("main")) {
-        		printer.print("Runnable r,");
+        	
+        		if(n.getBody().getStmts().toString().contains("yield;")) {
+        			printer.print("Runnable r,");
+        		
         	}
             for (Iterator<Parameter> i = n.getParameters().iterator(); i.hasNext();) {
                 Parameter p = i.next();

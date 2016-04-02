@@ -1,6 +1,6 @@
 public class Test2 {
 
-    public void foo(Runnable r,boolean x) {
+    public void foo(boolean x) {
         b = 123;
     }
 
