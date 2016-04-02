@@ -5,11 +5,13 @@ import japa.parser.ast.visitor.VoidVisitor;
 
 public class YieldStmt extends Statement {
 	 private final String id;
+	 
 
 	    public YieldStmt(int line, int column, String id) {
 	        super(line, column);
 	        this.id = id;
 	    }
+	   
 
 	    public String getId() {
 	        return id;

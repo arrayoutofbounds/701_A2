@@ -8,7 +8,6 @@ import java.io.PrintWriter;
 import japa.parser.JavaParser;
 import japa.parser.ParseException;
 import japa.parser.ast.CompilationUnit;
-import japa.parser.ast.visitor.SillyBreakVisitor;
 import japa.parser.ast.visitor.DumpVisitor;
 
 public class A2Compiler {
@@ -22,9 +21,6 @@ public class A2Compiler {
 		JavaParser parser = new JavaParser(new FileReader(file));
 		CompilationUnit ast = parser.CompilationUnit();
 		
-		// perform visit 1...
-		SillyBreakVisitor semanticsVisitor = new SillyBreakVisitor();
-		ast.accept(semanticsVisitor, null);
 		
 		// perform visit 2... etc etc 
 		// ...

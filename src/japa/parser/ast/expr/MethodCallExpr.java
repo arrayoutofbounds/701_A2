@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 Júlio Vilmar Gesser.
+ * Copyright (C) 2007 Jï¿½lio Vilmar Gesser.
  * 
  * This file is part of Java 1.5 parser and Abstract Syntax Tree.
  *
@@ -21,6 +21,7 @@
  */
 package japa.parser.ast.expr;
 
+import japa.parser.ast.stmt.BlockStmt;
 import japa.parser.ast.type.Type;
 import japa.parser.ast.visitor.GenericVisitor;
 import japa.parser.ast.visitor.VoidVisitor;
@@ -39,13 +40,32 @@ public final class MethodCallExpr extends Expression {
     private final String name;
 
     private final List<Expression> args;
-
+    
+    private BlockStmt yield;
+    
+    public MethodCallExpr(int line, int column, Expression scope, List<Type> typeArgs, String name, List<Expression> args, BlockStmt yield) {
+        super(line, column);
+        this.scope = scope;
+        this.typeArgs = typeArgs;
+        this.name = name;
+        this.args = args;
+        //System.out.println("this one called with " + yield);
+        this.yield = yield;
+    }
+   
+    
     public MethodCallExpr(int line, int column, Expression scope, List<Type> typeArgs, String name, List<Expression> args) {
         super(line, column);
         this.scope = scope;
         this.typeArgs = typeArgs;
         this.name = name;
         this.args = args;
+        //System.out.println("this one called with with no yield and " + name);
+    }
+    
+    public BlockStmt getYield() {
+    	//System.out.println("this was called with " + this.yield);
+    	return this.yield;
     }
 
     public Expression getScope() {

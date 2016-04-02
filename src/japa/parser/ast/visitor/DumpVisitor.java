@@ -103,7 +103,6 @@ import japa.parser.ast.stmt.ThrowStmt;
 import japa.parser.ast.stmt.TryStmt;
 import japa.parser.ast.stmt.TypeDeclarationStmt;
 import japa.parser.ast.stmt.WhileStmt;
-import japa.parser.ast.stmt.YieldBlockStmt;
 import japa.parser.ast.stmt.YieldStmt;
 import japa.parser.ast.type.ClassOrInterfaceType;
 import japa.parser.ast.type.PrimitiveType;
@@ -112,6 +111,7 @@ import japa.parser.ast.type.Type;
 import japa.parser.ast.type.VoidType;
 import japa.parser.ast.type.WildcardType;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -122,7 +122,10 @@ import java.util.List;
 public final class DumpVisitor implements VoidVisitor<Object> {
 
     private final SourcePrinter printer = new SourcePrinter();
-    private String yield = "";
+    private List<String> yieldStatements = new ArrayList<String>();
+    
+    private MethodCallExpr currentMethodCall = null;
+    
 
     public String getSource() {
         return printer.getSource();
@@ -696,6 +699,7 @@ public final class DumpVisitor implements VoidVisitor<Object> {
     }
 
     public void visit(MethodCallExpr n, Object arg) {
+    	currentMethodCall = n;
         if (n.getScope() != null) {
             n.getScope().accept(this, arg);
             printer.print(".");
@@ -712,7 +716,24 @@ public final class DumpVisitor implements VoidVisitor<Object> {
                 }
             }
         }
+        if(n.getYield() != null) {
+        	if(n.getArgs() != null) {
+        		printer.print(", ");
+        	}
+	        printer.printLn("new Runnable(){");
+	        printer.printLn("@Override");
+	        printer.printLn("public void run(){ ");
+	        printer.indent();
+	        for(Statement s : n.getYield().getStmts()) {
+	        	printer.printLn(s.toString());
+	        }
+	        printer.unindent();
+	        printer.printLn("}");
+	        printer.printLn("}");
+        }
+        
         printer.print(")");
+        currentMethodCall = null;
     }
 
     public void visit(ObjectCreationExpr n, Object arg) {
@@ -843,6 +864,10 @@ public final class DumpVisitor implements VoidVisitor<Object> {
 
         printer.print("(");
         if (n.getParameters() != null) {
+        	System.out.println(n.getName());
+        	if(!n.getName().toString().equals("main")) {
+        		printer.print("Runnable r,");
+        	}
             for (Iterator<Parameter> i = n.getParameters().iterator(); i.hasNext();) {
                 Parameter p = i.next();
                 p.accept(this, arg);
@@ -850,6 +875,8 @@ public final class DumpVisitor implements VoidVisitor<Object> {
                     printer.print(", ");
                 }
             }
+        }else {
+        	printer.print("Runnable r");
         }
         printer.print(")");
 
@@ -1303,22 +1330,10 @@ public final class DumpVisitor implements VoidVisitor<Object> {
         printer.printLn("*/");
     }
 
-	@Override
-	public void visit(YieldBlockStmt n, Object arg) {
-        if (n.getStmts() != null) {
-            for (Statement s : n.getStmts()) {
-                s.accept(this, arg);
-                yield = yield + s.toString();
-            }
-        }
-
-		
-	}
 
 	@Override
 	public void visit(YieldStmt n, Object arg) {
 		// TODO Auto-generated method stub
-		
-		 printer.printLn(yield);
+		printer.printLn("r.run();");
 	}
 }

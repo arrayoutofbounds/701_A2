@@ -2138,6 +2138,9 @@ Expression PrimaryPrefix():
 	Type type;
 	int line = -1;
 	int column = 0;
+	BlockStmt yield = null;
+	boolean hasYield =false;
+	
 }
 {
   (
@@ -2149,11 +2152,22 @@ Expression PrimaryPrefix():
 	  "." 
 	  [ typeArgs = TypeArguments() {line=((Type)typeArgs.get(0)).getBeginLine(); column=((Type)typeArgs.get(0)).getBeginColumn();} ]
 	  <IDENTIFIER> { name = token.image; if (line==-1) { line=token.beginLine; column=token.beginColumn; } }
-	  [ args = Arguments() {hasArgs=true;} ]
+	  [ args = Arguments() {hasArgs=true;} [yield = Block() {hasYield = true;}] ]
 	  	{
-	  		ret = hasArgs 
-	  			? new MethodCallExpr(line, column, ret, typeArgs, name, args)
-	  			: new FieldAccessExpr(line, column, ret, null, name);
+	  	  if(hasArgs && hasYield)
+	  	  {
+			ret = new MethodCallExpr(line, column, ret, typeArgs, name, args,yield);
+	  	  }
+	  	  else if (hasArgs && !hasYield)
+	  	  {
+	  	    ret = new MethodCallExpr(line, column, ret, typeArgs, name, args);
+	  	  }else
+	  	  {
+			ret = new FieldAccessExpr(line, column, ret, null, name);
+	  	  }
+	  		//ret = hasArgs 
+	  			//? new MethodCallExpr(line, column, ret, typeArgs, name, args)
+	  			//: new FieldAccessExpr(line, column, ret, null, name);
 	  	}
 	|
 	  "(" {line=token.beginLine; column=token.beginColumn;} ret = Expression() ")" { ret = new EnclosedExpr(line, column, ret); }
@@ -2164,11 +2178,17 @@ Expression PrimaryPrefix():
 	  type = ResultType() "." "class" { ret = new ClassExpr(type.getBeginLine(), type.getBeginColumn(), type); }
 	|
 	  	<IDENTIFIER> { name = token.image; line=token.beginLine; column=token.beginColumn; }
-	  	[ args = Arguments() {hasArgs=true;} ]
+	  	[ args = Arguments() {hasArgs=true;} [yield = Block(){hasYield = true;}] ]
+	  	
 	  	{
-	  		ret = hasArgs
-	  			? new MethodCallExpr(line, column, null, null, name, args)
-	  			: new NameExpr(line, column, name);
+	  	  if(hasArgs && hasYield)	  	  {			ret = new MethodCallExpr(line, column, null, null, name, args,yield);
+	  	  }
+	  	  else if (hasArgs && !hasYield)	  	  {
+	  	    ret = new MethodCallExpr(line, column, null, null, name, args);	  	  }else	  	  {			ret = new NameExpr(line, column, name);
+	  	  }
+	  		//ret = (hasArgs && hasYield)
+	  			//? new MethodCallExpr(line, column, null, null, name, args,yield)
+	  			//: new NameExpr(line, column, name);
 	  	}
   )
   { return ret; }
@@ -2197,6 +2217,9 @@ Expression PrimarySuffixWithoutSuper(Expression scope):
 	String name;
 	int line = -1;
 	int column = 0;
+	BlockStmt yield = null;
+	boolean hasYield = false;
+	
 }
 {
   (
@@ -2209,11 +2232,23 @@ Expression PrimarySuffixWithoutSuper(Expression scope):
 	  	LOOKAHEAD( [ TypeArguments() ] <IDENTIFIER> )
 	  	[ typeArgs = TypeArguments() {line=((Type)typeArgs.get(0)).getBeginLine(); column=((Type)typeArgs.get(0)).getBeginColumn();} ] 
 	  	<IDENTIFIER> { name = token.image; if (line==-1) { line=token.beginLine; column=token.beginColumn; } }
-	  	[ args = Arguments() {hasArgs=true;} ] 
+	  	[ args = Arguments() {hasArgs=true;} [yield = Block(){hasYield = true;}]  ]
+	  	
 	  	{
-	  		ret = hasArgs
-	  			? new MethodCallExpr(line, column, scope, typeArgs, name, args)
-	  			: new FieldAccessExpr(line, column, scope, typeArgs, name);
+	  	  if(hasArgs && hasYield)
+	  	  {
+			ret = new MethodCallExpr(line, column, scope, typeArgs, name, args,yield);
+	  	  }
+	  	  else if (hasArgs && !hasYield)
+	  	  {
+	  	    ret = new MethodCallExpr(line, column, scope, typeArgs, name, args);
+	  	  }else
+	  	  {
+			ret = new FieldAccessExpr(line, column, scope, typeArgs, name);
+	  	  }
+	  		//ret = hasArgs
+	  			//? new MethodCallExpr(line, column, scope, typeArgs, name, args)
+	  			//: new FieldAccessExpr(line, column, scope, typeArgs, name);
 	  	}
 	)
 	|
@@ -2375,12 +2410,9 @@ Statement Statement():
 	|
 	  ret = Block()
 	|
-	  LOOKAHEAD(5)
 	  ret = StatementExpression()
 	|
 	  ret = EmptyStatement()
-	|
-	  ret = YieldBlock() 
 	|
 	  ret = SwitchStatement()
 	|
@@ -2416,7 +2448,7 @@ YieldStmt YieldStatment() :
 	int column;
 }
 {
-  < YIELD > {line=token.beginLine; column=token.beginColumn;} [ <IDENTIFIER> { id = token.image; } ]  <SEMICOLON >
+  < YIELD > {line=token.beginLine; column=token.beginColumn; id = "yield";}    <SEMICOLON >
   { return new YieldStmt(line, column, id); }
 }
 
@@ -2457,23 +2489,6 @@ BlockStmt Block():
   	stmts = Statements() 
   "}" {endLine=token.beginLine; endColumn=token.beginColumn;}
   { return new BlockStmt(beginLine, beginColumn, endLine, endColumn, stmts); }
-}
-
-YieldBlockStmt YieldBlock():
-{
-	List stmts;
-	int beginLine;
-	int beginColumn;
-	int endLine;
-	int endColumn;
-	Expression methodCall;
-	System.out.println("in yield block");
-}
-{
-  methodCall = PrimaryPrefix()  "{" {beginLine=token.beginLine; beginColumn=token.beginColumn;} 
-  	stmts = Statements() 
-  "}"<SEMICOLON > {endLine=token.beginLine; endColumn=token.beginColumn;} 
-  { return new YieldBlockStmt(beginLine, beginColumn, endLine, endColumn, stmts,methodCall); }
 }
 
 /*
