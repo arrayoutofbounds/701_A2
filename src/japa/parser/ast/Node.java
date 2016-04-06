@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 Júlio Vilmar Gesser.
+ * Copyright (C) 2007 Jï¿½lio Vilmar Gesser.
  * 
  * This file is part of Java 1.5 parser and Abstract Syntax Tree.
  *
@@ -37,6 +37,8 @@ public abstract class Node {
     private final int endLine;
 
     private final int endColumn;
+    
+    protected symtab.Scope enclosingScope;
 
     /**
      * This attribute can store additional information from semantic analysis.
@@ -102,5 +104,15 @@ public abstract class Node {
         accept(visitor, null);
         return visitor.getSource();
     }
+    
+    // add set scope and get scope
+    
+    public void setThisNodeScope(symtab.Scope enclosingScope) {
+		this.enclosingScope = enclosingScope;
+	}
+	
+	public symtab.Scope getThisNodeScope() {
+		return enclosingScope;
+	}
 
 }

@@ -122,7 +122,6 @@ import java.util.List;
 public final class DumpVisitor implements VoidVisitor<Object> {
 
     private final SourcePrinter printer = new SourcePrinter();
-    private List<String> yieldStatements = new ArrayList<String>();
     
     private MethodCallExpr currentMethodCall = null;
     
@@ -864,8 +863,8 @@ public final class DumpVisitor implements VoidVisitor<Object> {
 
         printer.print("(");
         if (n.getParameters() != null) {
-        	System.out.println(n.getName());
-        	
+        	//System.out.println(n.getName());
+        		// if the statements contain yield, then put runnable in the params of that method
         		if(n.getBody().getStmts().toString().contains("yield;")) {
         			printer.print("Runnable r,");
         		

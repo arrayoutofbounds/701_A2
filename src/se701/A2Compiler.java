@@ -9,6 +9,7 @@ import japa.parser.JavaParser;
 import japa.parser.ParseException;
 import japa.parser.ast.CompilationUnit;
 import japa.parser.ast.visitor.DumpVisitor;
+import japa.parser.ast.visitor.TypingVisitor;
 
 public class A2Compiler {
 	
@@ -24,6 +25,9 @@ public class A2Compiler {
 		
 		// perform visit 2... etc etc 
 		// ...
+		
+		TypingVisitor typingVisitor =  new TypingVisitor();
+		ast.accept(typingVisitor, null);
 		
 		// perform visit N 
 		DumpVisitor printVisitor = new DumpVisitor();
