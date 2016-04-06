@@ -1,7 +1,9 @@
 public class Test1 extends Random {
+	private int a,c,d;
+	
 	int a;
 	
-	int [] b = {};
+	int[] b = {};
 	
 	public Test1(){
 	}

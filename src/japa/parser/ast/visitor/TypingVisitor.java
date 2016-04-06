@@ -242,6 +242,10 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 	}
 
 	public void visit(CompilationUnit n, Object arg) {
+		
+		
+		// just sets the current scope of this 
+		n.setThisNodeScope(currentScope);
 
 		if (n.getPakage() != null) {
 			n.getPakage().accept(this, arg);
@@ -264,6 +268,10 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 	}
 
 	public void visit(PackageDeclaration n, Object arg) {
+		
+		// just sets the current scope of this 
+		n.setThisNodeScope(currentScope);
+		
 		printAnnotations(n.getAnnotations(), arg);
 		printer.print("package ");
 		n.getName().accept(this, arg);
@@ -272,16 +280,26 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 	}
 
 	public void visit(NameExpr n, Object arg) {
+		// just sets the current scope of this 
+		n.setThisNodeScope(currentScope);
+		
 		printer.print(n.getName());
 	}
 
 	public void visit(QualifiedNameExpr n, Object arg) {
+		
+		// just sets the current scope of this 
+		n.setThisNodeScope(currentScope);
+		
 		n.getQualifier().accept(this, arg);
 		printer.print(".");
 		printer.print(n.getName());
 	}
 
 	public void visit(ImportDeclaration n, Object arg) {
+		// just sets the current scope of this 
+		n.setThisNodeScope(currentScope);
+		
 		printer.print("import ");
 		if (n.isStatic()) {
 			printer.print("static ");
@@ -1199,7 +1217,8 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 		}
 		printer.print(";");
 	}
-
+	
+	// This is a BLOCK that is used in if,while,for, CONSTRUCTOR etc
 	public void visit(BlockStmt n, Object arg) {
 		
 		symtab.LocalScope localScope = new symtab.LocalScope(currentScope);

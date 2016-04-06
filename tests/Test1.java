@@ -1,6 +1,8 @@
 public class Test1 extends Random {
 
-    int a;
+    private int a, c, d;
+
+    boo b;
 
     int[] b = {};
 

@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import japa.parser.JavaParser;
 import japa.parser.ParseException;
 import japa.parser.ast.CompilationUnit;
+import japa.parser.ast.visitor.DefinitionVisitor;
 import japa.parser.ast.visitor.DumpVisitor;
 import japa.parser.ast.visitor.TypingVisitor;
 
@@ -28,6 +29,9 @@ public class A2Compiler {
 		
 		TypingVisitor typingVisitor =  new TypingVisitor();
 		ast.accept(typingVisitor, null);
+		
+		DefinitionVisitor definitionVisitor = new DefinitionVisitor();
+		ast.accept(definitionVisitor, null);
 		
 		// perform visit N 
 		DumpVisitor printVisitor = new DumpVisitor();
