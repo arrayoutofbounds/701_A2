@@ -1338,6 +1338,10 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 	}
 
 	public void visit(EnumDeclaration n, Object arg) {
+		
+		// just sets the current scope of this 
+		n.setThisNodeScope(currentScope);
+		
 		if (n.getJavaDoc() != null) {
 			n.getJavaDoc().accept(this, arg);
 		}
@@ -1383,6 +1387,10 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 	}
 
 	public void visit(EnumConstantDeclaration n, Object arg) {
+		
+		// just sets the current scope of this 
+		n.setThisNodeScope(currentScope);
+		
 		if (n.getJavaDoc() != null) {
 			n.getJavaDoc().accept(this, arg);
 		}
@@ -1411,13 +1419,24 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 	}
 
 	public void visit(EmptyMemberDeclaration n, Object arg) {
+		
+		// just sets the current scope of this 
+		n.setThisNodeScope(currentScope);
+		
 		if (n.getJavaDoc() != null) {
 			n.getJavaDoc().accept(this, arg);
 		}
 		printer.print(";");
 	}
 
+	// WHAT SCOPE?
 	public void visit(InitializerDeclaration n, Object arg) {
+		
+		System.out.println(n + " " + n.getBeginLine() + " began initializer declaration");
+		
+		// just sets the current scope of this 
+		//n.setThisNodeScope(currentScope);
+		
 		if (n.getJavaDoc() != null) {
 			n.getJavaDoc().accept(this, arg);
 		}
@@ -1446,6 +1465,10 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 	}
 
 	public void visit(ContinueStmt n, Object arg) {
+		
+		// just sets the current scope of this 
+		n.setThisNodeScope(currentScope);
+		
 		printer.print("continue");
 		if (n.getId() != null) {
 			printer.print(" ");
@@ -1457,6 +1480,10 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 
 
 	public void visit(DoStmt n, Object arg) {
+		
+		// just sets the current scope of this 
+		n.setThisNodeScope(currentScope);
+		
 		printer.print("do ");
 		n.getBody().accept(this, arg);
 		printer.print(" while (");
@@ -1465,6 +1492,9 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 	}
 
 	public void visit(ForeachStmt n, Object arg) {
+		// just sets the current scope of this 
+		n.setThisNodeScope(currentScope);
+		
 		printer.print("for (");
 		n.getVariable().accept(this, arg);
 		printer.print(" : ");
@@ -1474,6 +1504,9 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 	}
 
 	public void visit(ForStmt n, Object arg) {
+		// just sets the current scope of this 
+		n.setThisNodeScope(currentScope);
+		
 		printer.print("for (");
 		if (n.getInit() != null) {
 			for (Iterator<Expression> i = n.getInit().iterator(); i.hasNext();) {
@@ -1503,12 +1536,18 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 	}
 
 	public void visit(ThrowStmt n, Object arg) {
+		// just sets the current scope of this 
+		n.setThisNodeScope(currentScope);
+		
 		printer.print("throw ");
 		n.getExpr().accept(this, arg);
 		printer.print(";");
 	}
 
 	public void visit(SynchronizedStmt n, Object arg) {
+		// just sets the current scope of this 
+		n.setThisNodeScope(currentScope);
+		
 		printer.print("synchronized (");
 		n.getExpr().accept(this, arg);
 		printer.print(") ");
@@ -1516,6 +1555,10 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 	}
 
 	public void visit(TryStmt n, Object arg) {
+		
+		// just sets the current scope of this 
+		n.setThisNodeScope(currentScope);
+		
 		printer.print("try ");
 		n.getTryBlock().accept(this, arg);
 		if (n.getCatchs() != null) {
@@ -1530,6 +1573,9 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 	}
 
 	public void visit(CatchClause n, Object arg) {
+		// just sets the current scope of this 
+		n.setThisNodeScope(currentScope);
+		
 		printer.print(" catch (");
 		n.getExcept().accept(this, arg);
 		printer.print(") ");
@@ -1538,6 +1584,11 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 	}
 
 	public void visit(AnnotationDeclaration n, Object arg) {
+		
+		
+		// just sets the current scope of this 
+		n.setThisNodeScope(currentScope);
+		
 		if (n.getJavaDoc() != null) {
 			n.getJavaDoc().accept(this, arg);
 		}
@@ -1556,6 +1607,9 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 	}
 
 	public void visit(AnnotationMemberDeclaration n, Object arg) {
+		// just sets the current scope of this 
+		n.setThisNodeScope(currentScope);
+		
 		if (n.getJavaDoc() != null) {
 			n.getJavaDoc().accept(this, arg);
 		}
@@ -1607,11 +1661,17 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 	}
 
 	public void visit(LineComment n, Object arg) {
+		// just sets the current scope of this 
+		n.setThisNodeScope(currentScope);
+		
 		printer.print("//");
 		printer.printLn(n.getContent());
 	}
 
 	public void visit(BlockComment n, Object arg) {
+		// just sets the current scope of this 
+		n.setThisNodeScope(currentScope);
+		
 		printer.print("/*");
 		printer.print(n.getContent());
 		printer.printLn("*/");
@@ -1620,6 +1680,9 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 
 	@Override
 	public void visit(YieldStmt n, Object arg) {
+		// just sets the current scope of this 
+		n.setThisNodeScope(currentScope);
+		
 		// TODO Auto-generated method stub
 		printer.printLn("r.run();");
 	}
