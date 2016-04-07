@@ -112,6 +112,7 @@ import japa.parser.ast.type.VoidType;
 import japa.parser.ast.type.WildcardType;
 import se701.A2SemanticsException;
 import symtab.ClassSymbol;
+import symtab.ConstructorSymbol;
 import symtab.GlobalScope;
 import symtab.LocalScope;
 import symtab.MethodSymbol;
@@ -328,7 +329,7 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 		if(currentScope.resolve(name) == null) {
 			currentScope.define(classSym);
 		}else {
-			throw new A2SemanticsException("Sorry, something with the same name already exists in this scope " + "at line " + n.getBeginLine());
+			throw new A2SemanticsException("Sorry, something with the same name already exists in this scope, " + "The duplicate is at line " + n.getBeginLine());
 		}
 		
 
@@ -1020,10 +1021,25 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 	public void visit(ConstructorDeclaration n, Object arg) {
 
 		// gets the constructor
-		//System.out.println(n);
-	
-		n.setThisNodeScope(currentScope);
+		//System.out.println(n.getTypeParameters());
+		
+		Symbol symOfVariable = currentScope.resolve(n .getName()); // find the symbol in the scopes above
+		
+		// create symbol with enclosing scope
+		symtab.ConstructorSymbol constructorSym = new symtab.ConstructorSymbol(n.getName(),(symtab.Type)symOfVariable,currentScope);
+		
+		if(currentScope.resolveThisScopeOnly(n.getName()) == null) {
+			currentScope.define(constructorSym);
+		}else {
+			throw new A2SemanticsException("Sorry, constructor with the same name already exists in this scope. " + " Duplicate is at line " + n.getBeginLine() );
+		}
+		
+		// set the scope of this node to the current scope
+		n.setThisNodeScope(constructorSym);
 
+		// set the current scope as the method scope 
+		currentScope = constructorSym;
+		
 
 		if (n.getJavaDoc() != null) {
 			n.getJavaDoc().accept(this, arg);
@@ -1060,7 +1076,9 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 			}
 		}
 		printer.print(" ");
-		n.getBlock().accept(this, arg); // this accepts a block statement. 
+		n.getBlock().accept(this, arg); // this accepts a block statement.
+		
+		currentScope = currentScope.getEnclosingScope();
 	}
 
 	public void visit(MethodDeclaration n, Object arg) {
@@ -1068,7 +1086,7 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 
 		// get the symbol of the returning type from the current scope (which we put as enclosing scope in the constructor)
 		Symbol symOfVariable = currentScope.resolve(n.getType().toString()); // this is passed in when creating the symbol 
-
+ 
 		// create a new scope and cast the type of the type to symtab.Type and pass in enclosing scope
 		symtab.MethodSymbol methodSym = new symtab.MethodSymbol(n.getName(), (symtab.Type)symOfVariable ,currentScope);
 
@@ -1080,9 +1098,9 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 		if(currentScope.resolveThisScopeOnly(n.getName()) == null) {
 			currentScope.define(methodSym);
 		}else {
-			throw new A2SemanticsException("Sorry, something with the same name already exists in this scope " + "at line " + n.getBeginLine() );
+			throw new A2SemanticsException("Sorry, method or class with the same name already exists in this scope. " + "The duplicate is at " + n.getBeginLine() );
 		}
-		currentScope.define(methodSym);
+		//currentScope.define(methodSym);
 
 		// just sets the current scope of this node to the method scope we made
 		n.setThisNodeScope(methodSym);

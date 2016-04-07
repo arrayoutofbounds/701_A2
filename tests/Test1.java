@@ -10,9 +10,6 @@ public class Test1 extends Random {
     public Test1() {
     }
 
-    public Test1() {
-    }
-
     public void foo(boolean x) {
         a = false;
     }
