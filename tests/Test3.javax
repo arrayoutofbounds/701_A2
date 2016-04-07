@@ -1,3 +1,10 @@
 public class Test3 {
-
+	foo2 f; 
+	
+	//redefining 
+	
+	foo2 f;
+	
+	class foo2 {
+    }
 }

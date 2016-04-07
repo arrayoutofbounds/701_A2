@@ -1,11 +1,6 @@
-public class Test1 extends Random {
+public class Test1 {
 
     private int a, c, d;
-
-    foo2 f;
-
-    class foo2 {
-    }
 
     public Test1() {
     }

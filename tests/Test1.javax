@@ -1,25 +1,10 @@
-public class Test1 extends Random {
+public class Test1  {
 	private int a,c,d;
 	
-	foo2 f; // what if this is an object using import or nested class
-	
-	//int a;
-	
-	//redefining foo2 f;
-	
-	class foo2 {
-    }
-    
-
-    
 	
 	public Test1(){
 	}
 	
-	// duplicating constructors public Test1(){
-	//}
-	
-
 
 	public void foo(boolean x) {
 		a = false;  // ERROR: incompatible types
