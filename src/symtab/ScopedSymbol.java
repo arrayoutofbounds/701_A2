@@ -28,4 +28,10 @@ public class ScopedSymbol extends Symbol implements Scope {
 		return null;
 	}
 
+	@Override
+	public Symbol resolveThisScopeOnly(String name) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

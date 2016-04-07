@@ -1,13 +1,23 @@
 public class Test1 extends Random {
 	private int a,c,d;
 	
-	int a;
+	foo2 f; // what if this is an object using import or nested class
 	
-	int[] b = {};
+	//int a;
+	
+	class foo2 {
+    }
+    
+
+    
 	
 	public Test1(){
 	}
 	
+	public Test1(){
+	}
+	
+
 
 	public void foo(boolean x) {
 		a = false;  // ERROR: incompatible types

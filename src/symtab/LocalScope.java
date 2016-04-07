@@ -5,10 +5,12 @@ import java.util.HashMap;
 public class LocalScope extends BaseScope {
 	
 	private HashMap<String,Symbol> symbols = new HashMap<String,Symbol>();
+
 	
 	public LocalScope(Scope enclosingScope) {
 		this.enclosingScope = enclosingScope; // this sets the enclosing scope of the parent base class.
 	}
+
 	
 	public String getScopeName() {
 		return "Local Scope";
@@ -28,6 +30,10 @@ public class LocalScope extends BaseScope {
 			return enclosingScope.resolve(name);
 		}
 		return null;
+	}
+	
+	public Symbol resolveThisScopeOnly(String name) {
+		return symbols.get(name);
 	}
 	
 

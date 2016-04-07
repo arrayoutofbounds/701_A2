@@ -5,4 +5,5 @@ public interface Scope {
 	public Scope getEnclosingScope();
 	public void define(Symbol symbol);
 	public Symbol resolve(String name);
+	public Symbol resolveThisScopeOnly(String name);
 }

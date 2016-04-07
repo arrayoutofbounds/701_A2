@@ -110,6 +110,7 @@ import japa.parser.ast.type.ReferenceType;
 import japa.parser.ast.type.Type;
 import japa.parser.ast.type.VoidType;
 import japa.parser.ast.type.WildcardType;
+import se701.A2SemanticsException;
 import symtab.ClassSymbol;
 import symtab.GlobalScope;
 import symtab.LocalScope;
@@ -324,7 +325,12 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 		ClassSymbol classSym = new ClassSymbol(name,currentScope);
 
 		// set the class as a symbol in the current scope, which is the global scope
-		currentScope.define(classSym);
+		if(currentScope.resolve(name) == null) {
+			currentScope.define(classSym);
+		}else {
+			throw new A2SemanticsException("Sorry, something with the same name already exists in this scope " + "at line " + n.getBeginLine());
+		}
+		
 
 		// make the current scope the class symbol we made
 		currentScope = classSym;
@@ -551,6 +557,8 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 	}
 
 	public void visit(ArrayInitializerExpr n, Object arg) {
+		
+		//System.out.println(n.getValues());
 
 		//System.out.println(n.toString()+ " on line " + n.getBeginLine());
 
@@ -588,6 +596,8 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 	}
 
 	public void visit(ArrayCreationExpr n, Object arg) {
+		
+		//System.out.println(n.toString());
 
 		// just sets the current scope of this 
 		n.setThisNodeScope(currentScope);
@@ -1006,11 +1016,13 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 		}
 	}
 	
-	// WHAT SCOPE GOES HERE?
+	
 	public void visit(ConstructorDeclaration n, Object arg) {
 
 		// gets the constructor
 		//System.out.println(n);
+	
+		n.setThisNodeScope(currentScope);
 
 
 		if (n.getJavaDoc() != null) {
@@ -1055,12 +1067,21 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 
 
 		// get the symbol of the returning type from the current scope (which we put as enclosing scope in the constructor)
-		Symbol symOfVariable = currentScope.resolve(n.getType().toString());
+		Symbol symOfVariable = currentScope.resolve(n.getType().toString()); // this is passed in when creating the symbol 
 
 		// create a new scope and cast the type of the type to symtab.Type and pass in enclosing scope
 		symtab.MethodSymbol methodSym = new symtab.MethodSymbol(n.getName(), (symtab.Type)symOfVariable ,currentScope);
 
-		// add this to the current scope 
+		// add this to the current scope by first checking that a method with the same name does not already exist 
+		// inside the current scope 
+		
+		// this only looks at the current scope because the scope above could have the method with the same name
+		// i.e it could be a "outer" class.
+		if(currentScope.resolveThisScopeOnly(n.getName()) == null) {
+			currentScope.define(methodSym);
+		}else {
+			throw new A2SemanticsException("Sorry, something with the same name already exists in this scope " + "at line " + n.getBeginLine() );
+		}
 		currentScope.define(methodSym);
 
 		// just sets the current scope of this node to the method scope we made
@@ -1068,6 +1089,8 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 
 		// set the current scope as the method scope 
 		currentScope = methodSym;
+		
+		//System.out.println("the scope is method scope with " + n + " " + currentScope.toString());
 
 
 
@@ -1147,6 +1170,7 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 		n.getId().accept(this, arg);
 	}
 
+	// stop the overloading of constructors
 	public void visit(ExplicitConstructorInvocationStmt n, Object arg) {
 		
 		// just sets the current scope of this 
@@ -1230,6 +1254,9 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 		// set the scope of this node to the local scope created 
 		n.setThisNodeScope(localScope);
 		
+		//System.out.println("the scope is block scope with " + n.getStmts());
+		
+		//System.out.println("enclosing scope is " + currentScope.getEnclosingScope().toString());
 		
 		
 		printer.printLn("{");

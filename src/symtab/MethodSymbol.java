@@ -33,6 +33,10 @@ public class MethodSymbol extends ScopedSymbol {
 		}
 		return null;
 	}
+	
+	public Symbol resolveThisScopeOnly(String name) {
+		return symbols.get(name);
+	}
 
 
 }

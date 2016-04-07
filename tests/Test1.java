@@ -2,9 +2,13 @@ public class Test1 extends Random {
 
     private int a, c, d;
 
-    boo b;
+    foo2 f;
 
-    int[] b = {};
+    class foo2 {
+    }
+
+    public Test1() {
+    }
 
     public Test1() {
     }
