@@ -5,6 +5,8 @@ public class Test1 extends Random {
 	
 	//int a;
 	
+	//redefining foo2 f;
+	
 	class foo2 {
     }
     
@@ -14,7 +16,7 @@ public class Test1 extends Random {
 	public Test1(){
 	}
 	
-	//public Test1(){
+	// duplicating constructors public Test1(){
 	//}
 	
 
