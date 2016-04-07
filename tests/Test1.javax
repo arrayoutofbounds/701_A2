@@ -1,11 +1,11 @@
 public class Test1  {
 	private int a,c,d;
-	
+	//a = 1;
 	
 	public Test1(){
 	}
-	
 
+	
 	public void foo(boolean x) {
 		a = false;  // ERROR: incompatible types
 		
