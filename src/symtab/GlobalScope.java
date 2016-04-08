@@ -16,6 +16,7 @@ public class GlobalScope extends BaseScope {
 		define(new BuiltInTypeSymbol("double"));
 		define(new BuiltInTypeSymbol("boolean"));
 		define(new BuiltInTypeSymbol("char"));
+		define(new ClassSymbol("void"));
 		//TODO add String. This goes into the overloaded constructor where a enclosing scope is not given
 		define(new ClassSymbol("String"));
 	}
