@@ -1131,7 +1131,7 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 		if (n.getParameters() != null) {
 			//System.out.println(n.getName());
 			// if the statements contain yield, then put runnable in the params of that method
-			if(n.getBody().getStmts().toString().contains("yield;")) {
+			if((n.getBody().getStmts() != null) && (n.getBody().getStmts().toString().contains("yield;"))) {
 				printer.print("Runnable r,");
 
 			}
