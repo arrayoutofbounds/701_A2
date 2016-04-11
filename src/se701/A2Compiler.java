@@ -10,6 +10,7 @@ import japa.parser.ParseException;
 import japa.parser.ast.CompilationUnit;
 import japa.parser.ast.visitor.DefinitionVisitor;
 import japa.parser.ast.visitor.DumpVisitor;
+import japa.parser.ast.visitor.ResolvingVisitor;
 import japa.parser.ast.visitor.TypingVisitor;
 
 public class A2Compiler {
@@ -24,16 +25,20 @@ public class A2Compiler {
 		CompilationUnit ast = parser.CompilationUnit();
 		
 		
-		// perform visit 2... etc etc 
-		// ...
-		
+		// add the scopes, classes, methods
 		TypingVisitor typingVisitor =  new TypingVisitor();
 		ast.accept(typingVisitor, null);
 		
+		// define all the variables, parameteres and check that the method returns a valid type
+		// and all variables not duplicated 
 		DefinitionVisitor definitionVisitor = new DefinitionVisitor();
 		ast.accept(definitionVisitor, null);
 		
-		// perform visit N 
+		// ensure that variables etc match what they say they are
+		ResolvingVisitor resolvingVisitor = new ResolvingVisitor();
+		ast.accept(resolvingVisitor, null);
+		
+		// perform visit N and print
 		DumpVisitor printVisitor = new DumpVisitor();
 		ast.accept(printVisitor, null);
 		

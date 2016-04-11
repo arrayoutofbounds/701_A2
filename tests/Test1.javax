@@ -8,7 +8,5 @@ public class Test1  {
 	
 	public void foo(boolean x) {
 		a = false;  // ERROR: incompatible types
-		
-		//break;
 	}
 }
