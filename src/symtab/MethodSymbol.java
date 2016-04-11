@@ -1,10 +1,17 @@
 package symtab;
 
 import java.util.HashMap;
+import java.util.List;
+
+import japa.parser.ast.body.Parameter;
+import japa.parser.ast.stmt.BlockStmt;
 
 public class MethodSymbol extends ScopedSymbol {
 
 	private HashMap<String,Symbol> symbols = new HashMap<String,Symbol>();
+	private List<Parameter> params;
+	private BlockStmt statement;
+	
 	
 	public MethodSymbol(String name, Type type) {
 		super(name, type);
@@ -13,6 +20,21 @@ public class MethodSymbol extends ScopedSymbol {
 	public MethodSymbol(String name, Type type,Scope enclosingScope) {
 		super(name, type);
 		this.enclosingScope = enclosingScope;
+	}
+	
+	public MethodSymbol(String name, Type type,Scope enclosingScope,List<Parameter> params,BlockStmt statement) {
+		super(name, type);
+		this.enclosingScope = enclosingScope;
+		this.params = params;
+		this.statement = statement;
+	}
+	
+	public List<Parameter> getParams() {
+		return this.params;
+	}
+	
+	public BlockStmt getBody() {
+		return this.statement;
 	}
 	
 	public String getScopeName() {
