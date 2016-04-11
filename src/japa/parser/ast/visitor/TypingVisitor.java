@@ -1089,6 +1089,8 @@ public final class TypingVisitor implements VoidVisitor<Object> {
  
 		// create a new scope and cast the type of the type to symtab.Type and pass in enclosing scope
 		symtab.MethodSymbol methodSym = new symtab.MethodSymbol(n.getName(), (symtab.Type)symOfVariable ,currentScope);
+		
+		//System.out.println("name used was " + n.getName() + " on line " + n.getBeginLine());
 
 		// add this to the current scope by first checking that a method with the same name does not already exist 
 		// inside the current scope 
