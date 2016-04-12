@@ -49,5 +49,6 @@ public class ClassSymbol extends ScopedSymbol implements Type {
 	public Symbol resolveThisScopeOnly(String name) {
 		return symbols.get(name);
 	}
+	
 
 }

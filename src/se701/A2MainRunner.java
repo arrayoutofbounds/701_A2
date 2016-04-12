@@ -12,7 +12,7 @@ public class A2MainRunner {
 		/*
 		 * These tests will be testing correctness of your Semantic Analysis visitors. The marker will be using their own files here. 
 		 */
-		for (int i = 1; i <= 33; i++) { 
+		for (int i = 1; i <= 34; i++) { 
 			String file = "tests"+System.getProperty("file.separator")+"Test"+i+".javax";
 			try {
 				A2Compiler.compile(new File(file));
