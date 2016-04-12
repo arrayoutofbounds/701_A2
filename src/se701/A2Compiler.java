@@ -11,6 +11,7 @@ import japa.parser.ast.CompilationUnit;
 import japa.parser.ast.visitor.DefinitionVisitor;
 import japa.parser.ast.visitor.DumpVisitor;
 import japa.parser.ast.visitor.ResolvingVisitor;
+import japa.parser.ast.visitor.SetYieldVisitor;
 import japa.parser.ast.visitor.TypingVisitor;
 
 public class A2Compiler {
@@ -37,6 +38,10 @@ public class A2Compiler {
 		// ensure that variables etc match what they say they are
 		ResolvingVisitor resolvingVisitor = new ResolvingVisitor();
 		ast.accept(resolvingVisitor, null);
+		
+		// set yield on method declaration
+		SetYieldVisitor setYield = new SetYieldVisitor();
+		ast.accept(setYield, null);
 		
 		// perform visit N and print
 		DumpVisitor printVisitor = new DumpVisitor();

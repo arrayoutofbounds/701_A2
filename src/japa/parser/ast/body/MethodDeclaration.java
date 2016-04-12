@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 Júlio Vilmar Gesser.
+ * Copyright (C) 2007 Jï¿½lio Vilmar Gesser.
  * 
  * This file is part of Java 1.5 parser and Abstract Syntax Tree.
  *
@@ -53,6 +53,8 @@ public final class MethodDeclaration extends BodyDeclaration {
     private final List<NameExpr> throws_;
 
     private final BlockStmt body;
+    
+    private boolean isYield = false;
 
     public MethodDeclaration(int line, int column, JavadocComment javaDoc, int modifiers, List<AnnotationExpr> annotations, List<TypeParameter> typeParameters, Type type, String name, List<Parameter> parameters, int arrayCount, List<NameExpr> throws_, BlockStmt block) {
         super(line, column, javaDoc);
@@ -65,6 +67,14 @@ public final class MethodDeclaration extends BodyDeclaration {
         this.arrayCount = arrayCount;
         this.throws_ = throws_;
         this.body = block;
+    }
+    
+    public boolean isYield() {
+    	return this.isYield;
+    }
+    
+    public void setIsYield(boolean isYield) {
+    	this.isYield = isYield;
     }
 
     public int getModifiers() {
