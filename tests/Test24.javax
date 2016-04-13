@@ -1,0 +1,9 @@
+public class Test24 {
+	
+	boolean b = false;
+	int d = 1;
+	int a = foo(d ,b);
+	
+	private void foo(int c,int f){}
+
+}

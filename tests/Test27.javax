@@ -1,0 +1,8 @@
+public class Test27 {
+	
+	
+	private int foo(){
+		return "hey";
+	}
+
+}

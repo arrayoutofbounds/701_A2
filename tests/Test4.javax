@@ -1,0 +1,8 @@
+public class Test4 {
+    foo2 f; 
+	
+	foo2 f; // redefining f
+	
+	class foo2 {
+    }
+}

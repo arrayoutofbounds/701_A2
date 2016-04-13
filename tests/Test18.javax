@@ -1,0 +1,9 @@
+public class Test18 {
+	
+	// this should fail due to duplicate params in the method scope
+	
+	public void foo(int a, boolean b, String b){
+	}	
+
+
+}

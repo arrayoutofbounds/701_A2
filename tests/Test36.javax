@@ -1,0 +1,18 @@
+
+public class Test36 {
+
+	// fail with wrong arugments and a yield block
+	
+	private int a;
+	
+	public Test36(){
+		a = 1;
+		foo(a){int a =1;};
+	
+	}
+	
+	private void foo(boolean a) {
+		yield;
+	}
+	
+}

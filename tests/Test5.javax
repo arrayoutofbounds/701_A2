@@ -1,0 +1,9 @@
+public class Test5 {
+	// duplicate constructors
+	public Test5(){
+	}
+	
+	public Test5(){
+	}
+	
+}

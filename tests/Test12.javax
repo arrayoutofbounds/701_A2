@@ -1,0 +1,10 @@
+public class Test12 {
+	
+	// fail due to not existant type DECLARED inside method
+	
+	public void boo(){
+		foo b;
+		
+	}
+
+}

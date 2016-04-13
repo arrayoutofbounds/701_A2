@@ -1,0 +1,11 @@
+public class Test13 {
+	
+	// fail due to invalid type
+	
+	private void bar(){}
+	
+	public void boo(){
+		bar b;
+	}
+
+}

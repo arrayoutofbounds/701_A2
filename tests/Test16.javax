@@ -1,0 +1,9 @@
+public class Test16 {
+	
+	// this should pass as to allow parameters in method
+	
+	public void foo(int a, boolean b, String c){
+	}	
+
+
+}

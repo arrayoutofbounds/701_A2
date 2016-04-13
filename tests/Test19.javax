@@ -1,0 +1,11 @@
+public class Test19 {
+	
+	// this should allow variable name to be the same in method param and outside method
+	
+	int a;
+	
+	public void foo(int a, boolean b, String c){
+	}	
+
+
+}

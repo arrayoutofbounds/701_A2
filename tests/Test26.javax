@@ -1,0 +1,8 @@
+public class Test26 {
+	
+	
+	private void foo(){
+		return 1;
+	}
+
+}

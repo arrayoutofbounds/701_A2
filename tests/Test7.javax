@@ -1,0 +1,16 @@
+public class Test7 {
+	
+	// same method and inner class name
+	
+	class foo {
+    }
+
+	
+
+
+	public void foo(boolean x) {
+		a = false;  // ERROR: incompatible types
+		
+		//break;
+	}
+}

@@ -1,0 +1,13 @@
+public class Test9 {
+
+	// pass with same method name in diff scopes
+	
+	public void foo(){}
+	
+	class Foo{
+	
+		public void foo(){}
+	}
+	
+
+}

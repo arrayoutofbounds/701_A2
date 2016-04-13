@@ -1,0 +1,8 @@
+public class Test11 {
+	
+	public void boo(){}
+	
+	// not a type declaration
+	boo b;
+
+}

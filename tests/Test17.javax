@@ -1,0 +1,9 @@
+public class Test17 {
+	
+	// this should fail due to undefined params  in method
+	
+	public void foo(int a, bool b, String c){
+	}	
+
+
+}

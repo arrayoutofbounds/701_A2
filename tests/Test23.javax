@@ -1,0 +1,12 @@
+public class Test23 {
+	
+	private void foo(){
+	
+		int a = 1;
+		bar(a);
+	}
+	
+	private void bar(){
+	}
+
+}

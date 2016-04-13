@@ -1,0 +1,16 @@
+public class Test29 {
+	
+	private boolean a = true;
+
+	private void boo(){
+	int b = 0;
+		foo(b){
+			System.out.println("hey");
+		};
+	}
+	
+	private void foo(int a){
+		yield;
+	}
+
+}

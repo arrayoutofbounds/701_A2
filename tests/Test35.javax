@@ -1,0 +1,18 @@
+
+public class Test35 {
+
+	// pass as a test with arguments in method call and block statement
+
+	private int a;
+	
+	public Test35(){
+		a = 1;
+		foo(a){int a =1;};
+	
+	}
+	
+	private void foo(int a) {
+		yield;
+	}
+	
+}

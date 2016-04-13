@@ -1,0 +1,15 @@
+public class Test22 {
+	private int e = 2;
+	private int d = foo(e); // THIS should fail due to foo method not having a argument. CHeck in resolver method call
+	
+	
+	public void foo(boolean w){
+		int a =1;
+		int b;
+		
+		a=b;
+	
+	}
+
+
+}

@@ -1,0 +1,9 @@
+public class Test32 {
+	
+	int a = fop();
+	
+	public boolean foo(){
+		return true;
+	}
+
+}

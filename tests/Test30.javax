@@ -1,0 +1,9 @@
+public class Test30 {
+	
+	int a = 1;
+	
+	public Test30(){
+		//this.a = 2;   // should PASS with the keyword this
+	}
+
+}

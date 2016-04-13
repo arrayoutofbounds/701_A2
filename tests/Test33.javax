@@ -1,0 +1,16 @@
+
+public class Test33 {
+
+	private int a;
+	
+	public Test33(){
+		foo();
+	
+	}
+	
+	private void foo() {
+		int a = false; // should pass because method has its own scope
+		
+	}
+	
+}

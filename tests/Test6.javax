@@ -1,0 +1,10 @@
+public class Test6 {
+	
+	// duplicate declaration field
+	
+    private int a,c,d;
+	
+	int a;
+	
+
+}

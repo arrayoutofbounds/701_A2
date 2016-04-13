@@ -1,0 +1,18 @@
+
+public class Test37 {
+	
+	// forward references
+
+	private int x;
+	
+	public Test37(){
+		foo();
+	}
+	
+	private void foo(){
+		int a = x;
+		int b = y;
+		int y = 123; // SHOULD FAIL AS b cannot be allocated y if its not been declared yet
+	}
+	
+}

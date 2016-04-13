@@ -1,0 +1,9 @@
+public class Test31 {
+	
+	int a = foo();
+	
+	public boolean foo(){
+		return true;
+	}
+
+}

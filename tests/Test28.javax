@@ -1,0 +1,8 @@
+public class Test28 {
+	
+	
+	private void foo(){
+		return ;
+	}
+
+}

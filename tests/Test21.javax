@@ -1,0 +1,14 @@
+public class Test22 {
+	
+	// this should allow as blocks have their own scope
+	
+	
+	public void foo(){
+		
+		{int y =1;}
+		{int y =1;}
+	
+	}
+
+
+}

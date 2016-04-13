@@ -1,0 +1,11 @@
+public class Test13 {
+	
+	// pass if initialised instance variable in correct place
+	
+	int a;
+	
+	public Test13(){
+	 a = 1;
+	}
+
+}

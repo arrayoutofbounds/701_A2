@@ -1,0 +1,15 @@
+public class Test20 {
+	
+	// this should allow variable name to be the same in method param and outside method
+	
+	
+	public void foo(){
+		
+		for(int a = 0;a<10;a++){
+			
+		}
+	
+	}
+
+
+}
