@@ -1082,6 +1082,7 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 	}
 
 	public void visit(MethodDeclaration n, Object arg) {
+		
 
 		// get the symbol of the returning type from the current scope (which we put as enclosing scope in the constructor)
 		Symbol symOfVariable = currentScope.resolve(n.getType().toString()); // this is passed in when creating the symbol 
@@ -1221,6 +1222,8 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 
 	public void visit(VariableDeclarationExpr n, Object arg) {
 		
+		//System.out.println(n + " " + n.getBeginLine());
+		
 		// just sets the current scope of this 
 		n.setThisNodeScope(currentScope);
 		
@@ -1264,20 +1267,18 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 	// This is a BLOCK that is used in if,while,for, CONSTRUCTOR etc
 	public void visit(BlockStmt n, Object arg) {
 		
-		
-		
+		// create new local scope symbol
 		symtab.LocalScope localScope = new symtab.LocalScope(currentScope);
-		
-		
-		// cannot define this block statement scope in the current scope ?
 		
 		// set the scope of this node to the local scope created 
 		n.setThisNodeScope(localScope);
 		
+		// set currentscope as that of the local scope created
 		currentScope = localScope;
 	
-		//System.out.println("the scope is block scope with " + n.getStmts());
 		
+		
+		//System.out.println("the scope is block scope with " + n.getStmts());
 		//System.out.println("enclosing scope is " + currentScope.getEnclosingScope().toString());
 		
 		

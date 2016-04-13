@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007 Júlio Vilmar Gesser.
+ * Copyright (C) 2007 Jï¿½lio Vilmar Gesser.
  * 
  * This file is part of Java 1.5 parser and Abstract Syntax Tree.
  *
@@ -32,10 +32,20 @@ import java.util.List;
 public final class BlockStmt extends Statement {
 
     private final List<Statement> stmts;
+    
+    private boolean isYieldBlock;
 
     public BlockStmt(int beginLine, int beginColumn, int endLine, int endColumn, List<Statement> stmts) {
         super(beginLine, beginColumn, endLine, endColumn);
         this.stmts = stmts;
+    }
+    
+    public void setIsYieldBlock(boolean b) {
+    	this.isYieldBlock = b;
+    }	
+    
+    public boolean getIsYieldBlock() {
+    	return this.isYieldBlock;
     }
 
     public List<Statement> getStmts() {
