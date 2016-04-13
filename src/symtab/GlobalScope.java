@@ -19,7 +19,9 @@ public class GlobalScope extends BaseScope {
 		define(new ClassSymbol("void"));
 		//TODO add String. This goes into the overloaded constructor where a enclosing scope is not given
 		define(new ClassSymbol("String"));
-		define(new ClassSymbol("System.out.println"));
+		define(new ClassSymbol("System.out"));
+		define(new MethodSymbol("println", (symtab.Type)(resolve("void")) ));
+		//test if its a void type System.out.println((symtab.Type)(resolve("void")) instanceof symtab.Type);
 	}
 	
 	public String getScopeName() {
