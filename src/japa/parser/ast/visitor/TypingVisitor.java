@@ -894,8 +894,9 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 	//  no new scope since its just a call
 	public void visit(MethodCallExpr n, Object arg) {
 
-		// just sets the current scope of this 
+		// just sets enclosing the current scope of this node
 		n.setThisNodeScope(currentScope);
+		
 
 		currentMethodCall = n;
 		if (n.getScope() != null) {
