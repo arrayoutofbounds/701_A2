@@ -1106,7 +1106,8 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 		Symbol symOfVariable = currentScope.resolve(n.getType().toString()); // this is passed in when creating the symbol 
  
 		// create a new scope and cast the type of the type to symtab.Type and pass in enclosing scope
-		symtab.MethodSymbol methodSym = new symtab.MethodSymbol(n.getName(), (symtab.Type)symOfVariable ,currentScope,n.getParameters());
+		symtab.MethodSymbol methodSym = new symtab.MethodSymbol(n.getName(), (symtab.Type)symOfVariable ,currentScope,n.getParameters(),n.getBody());
+	
 		
 		//System.out.println("name used was " + n.getName() + " on line " + n.getBeginLine());
 
@@ -1783,6 +1784,6 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 		n.setThisNodeScope(currentScope);
 		
 		// TODO Auto-generated method stub
-		printer.printLn("r.run();");
+		//printer.printLn("r.run();");
 	}
 }

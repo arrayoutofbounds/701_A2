@@ -131,6 +131,8 @@ public final class ResolvingVisitor implements VoidVisitor<Object> {
 
 	private MethodDeclaration currentMethodDeclaration = null;
 
+	public List<String> methodsWithYieldKeywordList = new ArrayList<String>();
+	
 	private Scope currentScope;
 
 
@@ -901,9 +903,11 @@ public final class ResolvingVisitor implements VoidVisitor<Object> {
 
 		String name = methodCallNode.getName();
 		// find the method declared in the scope
+		// this goes upwards with every resolve and tries to find the method symbol with the name of the method
 		MethodSymbol s = (MethodSymbol) currentScope.resolve(name);
+
 		if (s == null) {
-			throw new A2SemanticsException("Sorry, could not find method call " + methodCallNode.getName() + " on line " + methodCallNode.getBeginLine());
+			throw new A2SemanticsException("Sorry, could not find method call " + methodCallNode.getName() + " on line " + methodCallNode.getBeginLine() + " declared anywhere.");
 		}
 
 		int listLength = 0;
@@ -941,8 +945,46 @@ public final class ResolvingVisitor implements VoidVisitor<Object> {
 	}
 
 
+	private void checkMethodDeclarationIsYield(Scope currentScope,MethodCallExpr methodCallNode) {
+		String name = methodCallNode.getName();
+		MethodSymbol s = (MethodSymbol) currentScope.resolve(name);
+
+		if (s == null) {
+			throw new A2SemanticsException("Sorry, could not find method call " + methodCallNode.getName() + " on line " + methodCallNode.getBeginLine()+ " declared anywhere.");
+		}
+
+		// found the method declared 
+		
+		boolean hasYieldInDeclaration = false;
+		if(s.getBody().getStmts() != null) {
+			for(Statement statement : s.getBody().getStmts()) {
+				if(statement instanceof YieldStmt) {
+					hasYieldInDeclaration = true;
+				}
+			}
+
+			if(hasYieldInDeclaration) {
+				if(methodCallNode.getYield() == null) {
+					throw new A2SemanticsException("Cannot have yield statement in method declaration without yield block on method call at line " + methodCallNode.getBeginLine());
+				}
+			}
+			if(!hasYieldInDeclaration) {
+				throw new A2SemanticsException("yield statement missing in method declaration of " + methodCallNode.getName() + ". Cannot have yield block without yield statement in declaration");
+			}
+		}else {
+			// body is null so method call can have no yield
+			if(methodCallNode.getYield() == null) {
+				// do nothing
+			}
+		}
+
+	}
+
 	// Make sure that when method is called, the number of arguments and their types match up
 	public void visit(MethodCallExpr n, Object arg) {
+
+		//System.out.println(n + " on line " + n.getBeginLine());
+
 
 		/*
 		if(n.getYield() != null) {
@@ -959,7 +1001,17 @@ public final class ResolvingVisitor implements VoidVisitor<Object> {
 
 
 		if(n.getYield() != null) {
+			checkMethodDeclarationIsYield(currentScope,n);
 			n.getYield().accept(this, arg);
+		}else {
+			String name = n.getName();
+			for(String methodWithYield : methodsWithYieldKeywordList) {
+				if(methodWithYield.equals(name)) {
+					// this method call has a declaration that has a yield keyword
+					// throw exception as cannot have yield keyword without yield block
+					throw new A2SemanticsException("Cannot have method call without yield block " + name + " on line " + n.getBeginLine() + " if its method declration has a yield keyword" );
+				}
+			}
 		}
 
 		//System.out.println(n.getArgs() + " called on " + n.getBeginLine());
@@ -999,7 +1051,11 @@ public final class ResolvingVisitor implements VoidVisitor<Object> {
 					printer.print(", ");
 				}
 			}
+		}else {
+
 		}
+		
+		
 		if(n.getYield() != null) {
 			if(n.getArgs() != null) {
 				printer.print(", ");

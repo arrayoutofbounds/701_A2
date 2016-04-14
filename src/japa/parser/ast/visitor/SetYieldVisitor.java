@@ -127,6 +127,8 @@ public final class SetYieldVisitor implements VoidVisitor<Object> {
 	private MethodCallExpr currentMethodCall = null;
 	
 	private MethodDeclaration currentMethodDeclaration = null;
+	
+	public List<String> methodsWithYieldKeywordList = new ArrayList<String>();
 
 
 	public String getSource() {
@@ -1355,8 +1357,11 @@ public final class SetYieldVisitor implements VoidVisitor<Object> {
 		//System.out.println("already called");
 		
 		if(currentMethodDeclaration == null) {
-			throw new A2SemanticsException("Cannot place yield at line " + n.getBeginLine() + " as it is not called alongside/on a method.");
+			throw new A2SemanticsException("Cannot place yield at line " + n.getBeginLine() + " as it is not called inside a method.");
 		}
+		
+		// add the method name to the list that will go to the resolving visitor
+		methodsWithYieldKeywordList.add(currentMethodDeclaration.getName());
 		
 		currentMethodDeclaration.setIsYield(true);
 		

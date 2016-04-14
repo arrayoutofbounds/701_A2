@@ -111,6 +111,8 @@ import japa.parser.ast.type.Type;
 import japa.parser.ast.type.VoidType;
 import japa.parser.ast.type.WildcardType;
 import se701.A2SemanticsException;
+import symtab.MethodSymbol;
+import symtab.Scope;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -698,22 +700,14 @@ public final class DumpVisitor implements VoidVisitor<Object> {
 		printer.print("super");
 	}
 
+	
+	
 	public void visit(MethodCallExpr n, Object arg) {
 		currentMethodCall = n;
 		
 		if(n.getYield() != null) {
-			
-			List<Statement> statements = n.getYield().getStmts();
-			
-			for(Statement s : statements) {
-				if(s.toString().contains("yield;")) {
-					throw new A2SemanticsException("Cannot put yield inside a yield block. Error at line " + n.getYield().getBeginLine());
-				}
-			}
-			
 			n.getYield().accept(this, arg);
 		}
-		
 		
 		/*
 		if(n.getYield() != null) {

@@ -44,8 +44,10 @@ public class A2Compiler {
 		SetYieldVisitor setYield = new SetYieldVisitor();
 		ast.accept(setYield, null);
 		
+		
 		// ensure that variables etc match what they say they are
 		ResolvingVisitor resolvingVisitor = new ResolvingVisitor();
+		resolvingVisitor.methodsWithYieldKeywordList = setYield.methodsWithYieldKeywordList;
 		ast.accept(resolvingVisitor, null);
 		
 		// perform visit N and print
