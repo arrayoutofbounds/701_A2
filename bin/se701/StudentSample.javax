@@ -2,7 +2,10 @@ package se701;
 
 public class StudentSample {
 
-	public static void main(String[] args){ 
+	public static void main(){ 
+	
+		{int y = 0;}
+	
 		sampleMethod(){ 
 			//The  block 
 			for(int i = 0; i < 20; i++) { 
@@ -16,9 +19,7 @@ public class StudentSample {
 				System.out.println(i);
 			}
 		};
-		
-		  
-	} 
+	}
 
  	public static void sampleMethod() {
 		System.out.println("Execution started");

@@ -111,6 +111,7 @@ import japa.parser.ast.type.Type;
 import japa.parser.ast.type.VoidType;
 import japa.parser.ast.type.WildcardType;
 import se701.A2SemanticsException;
+import symtab.ClassSymbol;
 import symtab.MethodSymbol;
 import symtab.Scope;
 import symtab.Symbol;
@@ -286,11 +287,6 @@ public final class DefinitionVisitor implements VoidVisitor<Object> {
 
 	public void visit(ClassOrInterfaceDeclaration n, Object arg) {
 
-		//System.out.println( "get parameters :\n" + n.getTypeParameters());
-		//System.out.println("get name :\n" +n.getName());
-		//System.out.println("get data :\n" +n.getData());
-		//System.out.println("get members :\n" +n.getMembers());
-
 		if (n.getJavaDoc() != null) {
 			n.getJavaDoc().accept(this, arg);
 		}
@@ -449,7 +445,7 @@ public final class DefinitionVisitor implements VoidVisitor<Object> {
 			throw new A2SemanticsException(n.getType().toString() + " on line " + n.getType().getBeginLine() + " is not a valid type");
 		}
 
-		
+
 		//System.out.println(n.getType() + " on line " + n.getBeginLine());
 
 
@@ -598,6 +594,8 @@ public final class DefinitionVisitor implements VoidVisitor<Object> {
 
 	public void visit(AssignExpr n, Object arg) {
 
+		//System.out.println(n.toString()  + " on line " + n.getBeginLine());
+
 
 		// this gets the expression i.e a = 1;
 		//System.out.println("assign expr " + n + " on line " +  n.getBeginLine());
@@ -617,7 +615,6 @@ public final class DefinitionVisitor implements VoidVisitor<Object> {
 		// this gets the type, like int, boolean, foo etc
 		//symtab.Type typeOfVariableLhs = getTypeOfExpression(currentScope,lhs);
 		//symtab.Type typeOfVariableRhs = getTypeOfExpression(currentScope,rhs);
-
 
 
 
@@ -832,6 +829,18 @@ public final class DefinitionVisitor implements VoidVisitor<Object> {
 	public void visit(MethodCallExpr n, Object arg) {
 		//System.out.println("assign expr " + n + " on line " +  n.getBeginLine());
 
+		/*
+		if(n.getYield() != null) {
+			System.out.println(n.getYield().getIsBlock() + " on line " + n.getBeginLine() + " definition visitor");
+			System.out.println((n.getYield() instanceof BlockStmt) + " on line " + n.getBeginLine() + " definition visitor");
+		}
+
+		 */
+
+		if(n.getYield() != null) {
+			n.getYield().accept(this, arg);
+		}
+
 
 		currentMethodCall = n;
 		if (n.getScope() != null) {
@@ -869,10 +878,10 @@ public final class DefinitionVisitor implements VoidVisitor<Object> {
 		printer.print(")");
 		currentMethodCall = null;
 	}
-	
+
 	// this gets called form method declaration when its type "House"
 	public void visit(ObjectCreationExpr n, Object arg) {
-		
+
 		if (n.getScope() != null) {
 			n.getScope().accept(this, arg);
 			printer.print(".");
@@ -982,7 +991,7 @@ public final class DefinitionVisitor implements VoidVisitor<Object> {
 		printer.print(" ");
 		n.getBlock().accept(this, arg);
 	}
-	
+
 	// no need to define the method as it is already defined in the scope by the typing visitor
 	public void visit(MethodDeclaration n, Object arg) {
 
@@ -1031,10 +1040,10 @@ public final class DefinitionVisitor implements VoidVisitor<Object> {
 		if (n.getParameters() != null) {
 			//System.out.println(n.getName());
 			// if the statements contain yield, then put runnable in the params of that method
-			if((n.getBody().getStmts() != null) && (n.getBody().getStmts().toString().contains("yield;"))) {
-				printer.print("Runnable r,");
+			//if((n.getBody().getStmts() != null) && (n.getBody().getStmts().toString().contains("yield;"))) {
+			//printer.print("Runnable r,");
 
-			}
+			//}
 			for (Iterator<Parameter> i = n.getParameters().iterator(); i.hasNext();) {
 				Parameter p = i.next();
 				p.accept(this, arg);
@@ -1043,7 +1052,7 @@ public final class DefinitionVisitor implements VoidVisitor<Object> {
 				}
 			}
 		}else {
-			printer.print("Runnable r");
+			//printer.print("Runnable r");
 		}
 		printer.print(")");
 
@@ -1102,9 +1111,9 @@ public final class DefinitionVisitor implements VoidVisitor<Object> {
 		// now need to check that the parameter is not defined in its current scope ONLY. 
 		// DO NOT cascade up the scope because we want to define it to the scope that the parameter is in only.
 		// if its not then add it to the current scope
-		
+
 		String varName = n.getId().toString(); // gets the name of the variable
-		
+
 		// check if this variable already exists in the scope
 		if (n.getThisNodeScope().resolveThisScopeOnly(varName) != null) {
 			throw new A2SemanticsException("Sorry this variable " + varName + " has already been defined in this scope on line " + n.getBeginLine() + ". You cannot redefine it on line " + n.getBeginLine() + " and column " + n.getBeginColumn());
@@ -1114,7 +1123,7 @@ public final class DefinitionVisitor implements VoidVisitor<Object> {
 
 		Symbol variableSymbol = new VariableSymbol(varName,(symtab.Type)symOfVariable);
 
-		n.getThisNodeScope().define(variableSymbol); // adds to the scope of the method that uses this parameter
+		n.getThisNodeScope().define(variableSymbol); // adds to the scope of the method scope that uses this parameter
 
 
 		printAnnotations(n.getAnnotations(), arg);
@@ -1198,13 +1207,19 @@ public final class DefinitionVisitor implements VoidVisitor<Object> {
 			}
 
 			String varName = v.getId().toString(); // gets the name of the variable
-			
+			System.out.println(varName + " on line " + v.getBeginLine());
 			// check the scope above if the scope above is a local scope . i.e a method or a block scope that is enclosing it 
 			if(currentScope.getEnclosingScope() instanceof symtab.LocalScope) {
-				VariableSymbol variableSymbol = (symtab.VariableSymbol)currentScope.getEnclosingScope().resolve(varName);
-				if(variableSymbol != null) {
-					throw new A2SemanticsException("Sorry the variable " + varName + " on line " + v.getBeginLine() + " has already been defined in the local scope above"); 
-				}
+				//System.out.println(currentScope.getScopeName());
+				//System.out.println(currentScope.getEnclosingScope().getScopeName());
+				//System.out.println(currentScope.getEnclosingScope().getEnclosingScope().getScopeName());
+				VariableSymbol variableSymbol = (symtab.VariableSymbol)currentScope.getEnclosingScope().resolveThisScopeOnly(varName);
+				
+
+					if(variableSymbol != null) {
+						throw new A2SemanticsException("Sorry the variable " + varName + " on line " + v.getBeginLine() + " has already been defined in the local scope above"); 
+					}
+				
 			}
 
 			// check to see if already in the current scope
@@ -1214,7 +1229,7 @@ public final class DefinitionVisitor implements VoidVisitor<Object> {
 
 			// so we know that the variable has not been defined. Hence define it and add to the current scope of this node
 			VariableSymbol variableSymbol = new VariableSymbol(varName,(symtab.Type)symOfVariable);
-			
+
 			// set the line number of the declration symbol
 			variableSymbol.setLineNumber(n.getBeginLine());
 
@@ -1238,9 +1253,10 @@ public final class DefinitionVisitor implements VoidVisitor<Object> {
 	}
 
 	public void visit(BlockStmt n, Object arg) {
-		
+
 		//System.out.println(n + " on line " + n.getBeginLine());
-		
+
+
 		printer.printLn("{");
 		if (n.getStmts() != null) {
 			printer.indent();
@@ -1463,10 +1479,10 @@ public final class DefinitionVisitor implements VoidVisitor<Object> {
 	}
 
 	public void visit(ForStmt n, Object arg) {
-		
+
 		printer.print("for (");
 		if (n.getInit() != null) {
-			
+
 			for (Iterator<Expression> i = n.getInit().iterator(); i.hasNext();) {
 				Expression e = i.next();
 				e.accept(this, arg);
@@ -1613,6 +1629,6 @@ public final class DefinitionVisitor implements VoidVisitor<Object> {
 	@Override
 	public void visit(YieldStmt n, Object arg) {
 		// TODO Auto-generated method stub
-		printer.printLn("r.run();");
+		//printer.printLn("r.run();");
 	}
 }

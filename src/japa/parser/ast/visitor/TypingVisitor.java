@@ -893,9 +893,23 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 
 	//  no new scope since its just a call
 	public void visit(MethodCallExpr n, Object arg) {
+		
+		//System.out.println(n.getYield() + " on line " + n.getBeginLine());
 
 		// just sets enclosing the current scope of this node
 		n.setThisNodeScope(currentScope);
+		
+		if(n.getYield() != null) {
+		n.getYield().accept(this, arg);
+		}
+		
+		//if(n.getYield() != null) {
+			//n.getYield().setIsBlock(true);
+		//}
+		//if(n.getYield() != null) {
+			//System.out.println(n.getYield().getIsBlock() + " on line " + n.getBeginLine() + " typing visitor");
+			//System.out.println((n.getYield() instanceof BlockStmt) + " on line " + n.getBeginLine() + " typing visitor");
+		//}
 		
 
 		currentMethodCall = n;
@@ -915,6 +929,7 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 				}
 			}
 		}
+		/*
 		if(n.getYield() != null) {
 			if(n.getArgs() != null) {
 				printer.print(", ");
@@ -930,6 +945,8 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 			printer.printLn("}");
 			printer.printLn("}");
 		}
+		
+		*/
 
 		printer.print(")");
 		currentMethodCall = null;
@@ -1089,7 +1106,7 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 		Symbol symOfVariable = currentScope.resolve(n.getType().toString()); // this is passed in when creating the symbol 
  
 		// create a new scope and cast the type of the type to symtab.Type and pass in enclosing scope
-		symtab.MethodSymbol methodSym = new symtab.MethodSymbol(n.getName(), (symtab.Type)symOfVariable ,currentScope,n.getParameters(),n.getBody());
+		symtab.MethodSymbol methodSym = new symtab.MethodSymbol(n.getName(), (symtab.Type)symOfVariable ,currentScope,n.getParameters());
 		
 		//System.out.println("name used was " + n.getName() + " on line " + n.getBeginLine());
 
@@ -1268,16 +1285,22 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 	// This is a BLOCK that is used in if,while,for, CONSTRUCTOR etc
 	public void visit(BlockStmt n, Object arg) {
 		
+		//System.out.println(n.getStmts() + "\n\n\n\n");
+		
+		//System.out.println(currentScope);
+		
 		// create new local scope symbol
 		symtab.LocalScope localScope = new symtab.LocalScope(currentScope);
 		
-		// set the scope of this node to the local scope created 
-		n.setThisNodeScope(localScope);
-		
 		// set currentscope as that of the local scope created
 		currentScope = localScope;
-	
 		
+		// set the scope of this node to the local scope created 
+		n.setThisNodeScope(currentScope);
+		
+		// testing by ensuring that it is a block statement node
+		n.setIsBlock(true);
+	
 		
 		//System.out.println("the scope is block scope with " + n.getStmts());
 		//System.out.println("enclosing scope is " + currentScope.getEnclosingScope().toString());
@@ -1287,6 +1310,7 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 		if (n.getStmts() != null) {
 			printer.indent();
 			for (Statement s : n.getStmts()) {
+				//System.out.println(s + " in typing v");
 				s.accept(this, arg);
 				printer.printLn();
 			}
@@ -1312,7 +1336,7 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 	public void visit(EmptyStmt n, Object arg) {
 		
 		// just sets the current scope of this 
-		n.setThisNodeScope(currentScope);
+		//n.setThisNodeScope(currentScope);
 		
 		printer.print(";");
 	}
@@ -1327,6 +1351,7 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 	}
 
 	/**
+	 * 
 	 * The switch statement has curly braces. Hence it has a scope
 	 * So set the local scope 
 	 */
@@ -1499,13 +1524,12 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 		printer.print(";");
 	}
 
-	// WHAT SCOPE?
 	public void visit(InitializerDeclaration n, Object arg) {
 		
-		System.out.println(n + " " + n.getBeginLine() + " began initializer declaration");
+		//System.out.println(n + " " + n.getBeginLine() + " began initializer declaration");
 		
 		// just sets the current scope of this 
-		//n.setThisNodeScope(currentScope);
+		n.setThisNodeScope(currentScope);
 		
 		if (n.getJavaDoc() != null) {
 			n.getJavaDoc().accept(this, arg);
@@ -1517,6 +1541,9 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 	}
 
 	public void visit(IfStmt n, Object arg) {
+		
+		n.setThisNodeScope(currentScope);
+		
 		printer.print("if (");
 		n.getCondition().accept(this, arg);
 		printer.print(") ");
@@ -1528,6 +1555,8 @@ public final class TypingVisitor implements VoidVisitor<Object> {
 	}
 
 	public void visit(WhileStmt n, Object arg) {
+		n.setThisNodeScope(currentScope);
+		
 		printer.print("while (");
 		n.getCondition().accept(this, arg);
 		printer.print(") ");

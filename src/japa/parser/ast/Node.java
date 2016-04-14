@@ -22,7 +22,9 @@
 package japa.parser.ast;
 
 import japa.parser.ast.visitor.DumpVisitor;
+
 import japa.parser.ast.visitor.GenericVisitor;
+
 import japa.parser.ast.visitor.VoidVisitor;
 
 /**
@@ -102,7 +104,7 @@ public abstract class Node {
     public final String toString() {
         DumpVisitor visitor = new DumpVisitor();
         accept(visitor, null);
-        return visitor.getSource();
+       return visitor.getSource();
     }
     
     // add set scope and get scope

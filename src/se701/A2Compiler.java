@@ -26,6 +26,11 @@ public class A2Compiler {
 		CompilationUnit ast = parser.CompilationUnit();
 		
 		
+		// perform visit N and print
+		//TestVisitor testVisitor = new TestVisitor();
+		//ast.accept(testVisitor, null);
+		
+		
 		// add the scopes, classes, methods
 		TypingVisitor typingVisitor =  new TypingVisitor();
 		ast.accept(typingVisitor, null);
@@ -35,13 +40,13 @@ public class A2Compiler {
 		DefinitionVisitor definitionVisitor = new DefinitionVisitor();
 		ast.accept(definitionVisitor, null);
 		
+		// set yield on method declaration when yield statement is reached so that it can print in dump visitor
+		SetYieldVisitor setYield = new SetYieldVisitor();
+		ast.accept(setYield, null);
+		
 		// ensure that variables etc match what they say they are
 		ResolvingVisitor resolvingVisitor = new ResolvingVisitor();
 		ast.accept(resolvingVisitor, null);
-		
-		// set yield on method declaration
-		SetYieldVisitor setYield = new SetYieldVisitor();
-		ast.accept(setYield, null);
 		
 		// perform visit N and print
 		DumpVisitor printVisitor = new DumpVisitor();

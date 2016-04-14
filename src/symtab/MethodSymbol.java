@@ -22,11 +22,10 @@ public class MethodSymbol extends ScopedSymbol {
 		this.enclosingScope = enclosingScope;
 	}
 	
-	public MethodSymbol(String name, Type type,Scope enclosingScope,List<Parameter> params,BlockStmt statement) {
+	public MethodSymbol(String name, Type type,Scope enclosingScope,List<Parameter> params) {
 		super(name, type);
 		this.enclosingScope = enclosingScope;
 		this.params = params;
-		this.statement = statement;
 	}
 	
 	public List<Parameter> getParams() {

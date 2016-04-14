@@ -2,13 +2,14 @@ public class Test29 {
 
     private boolean a = true;
 
-    private void boo(Runnable r) {
+    private void boo() {
         int b = 0;
-        foo(new Runnable(){
+        {
+            System.out.println("hey");
+        }foo(new Runnable(){
         @Override
         public void run(){ 
-            System.out.println("hey");
-        }
+            System.out.println("hey");}
         }
         , b);
     }

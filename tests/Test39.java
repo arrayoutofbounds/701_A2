@@ -4,8 +4,7 @@ public class Test39 {
         method1(new Runnable(){
         @Override
         public void run(){ 
-            z = 2;
-        }
+            z = 2;}
         }
         );
     }

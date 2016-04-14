@@ -419,7 +419,7 @@ public final class ResolvingVisitor implements VoidVisitor<Object> {
 
 		// set the current scope to that of the declaration node
 		currentScope = n.getThisNodeScope();
-		
+
 		// get symbol of the type on LHS
 		Symbol symOfVariable = currentScope.resolve(n.getType().toString());
 
@@ -446,7 +446,7 @@ public final class ResolvingVisitor implements VoidVisitor<Object> {
 
 
 			if (typeOfVariableRhs != null) {
-				
+
 				//System.out.println(typeOfVariableRhs.getName().toString());
 				//System.out.println(((symtab.Type)symOfVariable).getName());
 
@@ -478,13 +478,13 @@ public final class ResolvingVisitor implements VoidVisitor<Object> {
 			//System.out.println(n.getId());
 
 			// this gets the type, like int, boolean, foo() etc
-			
+
 			////symtab.Type typeOfVariableRhs = getTypeOfExpression(currentScope,rhs);
 
 			// if the expression is null then declaration is not valid. Assuming "=" is already printed.
-			
+
 			////if(typeOfVariableRhs == null){
-				////throw new A2SemanticsException("Sorry, the expression " + rhs +  " on right hand side " + " on line " + n.getBeginLine() + " has not been declared");
+			////throw new A2SemanticsException("Sorry, the expression " + rhs +  " on right hand side " + " on line " + n.getBeginLine() + " has not been declared");
 			////}
 
 
@@ -606,10 +606,10 @@ public final class ResolvingVisitor implements VoidVisitor<Object> {
 					// this is when its a object being created
 					//System.out.println(init.toString());
 					//System.out.println(init.toString().split("new")[1]);
-					
+
 					int i = init.toString().split("new")[1].indexOf("(");
 					//System.out.println(init.toString().split("new")[1].substring(0, i).trim());
-					
+
 					sym = currentScope.resolve(init.toString().split("new")[1].substring(0, i).trim());
 				}
 
@@ -635,8 +635,11 @@ public final class ResolvingVisitor implements VoidVisitor<Object> {
 
 		//System.out.println(n + " on line " + n.getBeginLine());
 
+
+		// get scope of the node
 		currentScope = n.getThisNodeScope();
 
+		// get the lhs and rhs of the assignment
 		Expression lhs = n.getTarget();
 		Expression rhs = n.getValue();
 
@@ -937,12 +940,23 @@ public final class ResolvingVisitor implements VoidVisitor<Object> {
 
 	// Make sure that when method is called, the number of arguments and their types match up
 	public void visit(MethodCallExpr n, Object arg) {
+		
+		/*
+		if(n.getYield() != null) {
+			System.out.println(n.getYield().getIsBlock() + " on line " + n.getBeginLine() + " resolving visitor");
+			System.out.println((n.getYield() instanceof BlockStmt) + " on line " + n.getBeginLine() + " resolving visitor");
+		}
+		*/
 
 		//if(n.getYield() != null) {
 		//System.out.println(n.getYield());
 		//}
 
 		currentScope = n.getThisNodeScope();
+		
+		if(n.getYield() != null) {
+		n.getYield().accept(this, arg);
+		}
 
 		//System.out.println(n.getArgs() + " called on " + n.getBeginLine());
 		currentMethodCall = n;
@@ -957,12 +971,22 @@ public final class ResolvingVisitor implements VoidVisitor<Object> {
 		printer.print("(");
 		if (n.getArgs() != null) {
 
-			// check number of arguments. If it passses then method call has correct number of arguments
-			//checkNumberOfArgs(currentScope,n);
 
-			// ensure the type of the args is correct compared with method declaration
-			checkArgsType(currentScope,n);
+			if(n.getName().equals("println")) {
+				List<Expression> args = n.getArgs();
+				symtab.Type typeOfArg = getTypeOfExpression(currentScope,args.get(0));
+				symtab.Type stringType = (symtab.Type)currentScope.resolve("String");
 
+				if(typeOfArg != stringType) {
+					throw new A2SemanticsException("Println cannot accept a argument that is not string");
+				}
+			}else {
+				// check number of arguments. If it passses then method call has correct number of arguments
+				checkNumberOfArgs(currentScope,n);
+
+				// ensure the type of the args is correct compared with method declaration
+				checkArgsType(currentScope,n);	
+			}
 
 			for (Iterator<Expression> i = n.getArgs().iterator(); i.hasNext();) {
 				Expression e = i.next();
@@ -993,13 +1017,13 @@ public final class ResolvingVisitor implements VoidVisitor<Object> {
 	}
 
 	public void visit(ObjectCreationExpr n, Object arg) {
-		
+
 		// set current scope as that of object node
 		currentScope = n.getThisNodeScope();
 
 		// get the symbol of the class of the object being created. i.e House
 		Symbol symOfVariable = currentScope.resolve(n.getType().toString());
-		
+
 		/*
 		 * THis checks that the "type" of the variable is not null
 		 * and an instance of the type interface ( i.e its already a object thats been defined 
@@ -1129,6 +1153,8 @@ public final class ResolvingVisitor implements VoidVisitor<Object> {
 	}
 
 	public void visit(MethodDeclaration n, Object arg) {
+
+		// check that if node is a yield then it must have a yield sta
 
 		// check if the body has a return statement
 		// get the value its returning
@@ -1331,6 +1357,9 @@ public final class ResolvingVisitor implements VoidVisitor<Object> {
 	}
 
 	public void visit(BlockStmt n, Object arg) {
+		
+		//System.out.println(n + " on line " + n.getBeginLine());
+		
 		printer.printLn("{");
 		if (n.getStmts() != null) {
 			printer.indent();

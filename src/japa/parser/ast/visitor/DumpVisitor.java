@@ -110,6 +110,7 @@ import japa.parser.ast.type.ReferenceType;
 import japa.parser.ast.type.Type;
 import japa.parser.ast.type.VoidType;
 import japa.parser.ast.type.WildcardType;
+import se701.A2SemanticsException;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -699,6 +700,18 @@ public final class DumpVisitor implements VoidVisitor<Object> {
 
 	public void visit(MethodCallExpr n, Object arg) {
 		currentMethodCall = n;
+		
+		if(n.getYield() != null) {
+		n.getYield().accept(this, arg);
+		}
+		
+		/*
+		if(n.getYield() != null) {
+			System.out.println(n.getYield().getIsBlock() + " on line " + n.getBeginLine() + " dump visitor");
+			System.out.println((n.getYield() instanceof BlockStmt) + " on line " + n.getBeginLine() + " dump visitor");
+		}
+		*/
+		
 		if (n.getScope() != null) {
 			n.getScope().accept(this, arg);
 			printer.print(".");
@@ -714,7 +727,12 @@ public final class DumpVisitor implements VoidVisitor<Object> {
 			printer.printLn("public void run(){ ");
 			printer.indent();
 			for(Statement s : n.getYield().getStmts()) {
-				printer.printLn(s.toString());
+				if(!(s instanceof YieldStmt)) {
+					s.accept(this, arg);
+				}else {
+					throw new A2SemanticsException("Yield keyword encountered on line "+s.getBeginLine()+" column "+s.getBeginColumn()+" cannot have the yield keyword within a yield block");
+				}
+				//printer.printLn(s.toString());
 			}
 			printer.unindent();
 			printer.printLn("}");
@@ -869,7 +887,7 @@ public final class DumpVisitor implements VoidVisitor<Object> {
 		if (n.getParameters() != null) {
 			//System.out.println(n.getName());
 			// if the statements contain yield, then put runnable in the params of that method
-
+			
 			if(n.isYield()) {
 				printer.print("Runnable r,");
 			}
@@ -881,7 +899,9 @@ public final class DumpVisitor implements VoidVisitor<Object> {
 				}
 			}
 		}else {
-			printer.print("Runnable r");
+			if(n.isYield()) {
+				printer.print("Runnable r");
+			}
 		}
 		printer.print(")");
 
@@ -975,6 +995,9 @@ public final class DumpVisitor implements VoidVisitor<Object> {
 	}
 
 	public void visit(BlockStmt n, Object arg) {
+		
+		//System.out.println(n.getIsBlock() + " instance is " + n.getClass() );
+		
 		printer.printLn("{");
 		if (n.getStmts() != null) {
 			printer.indent();

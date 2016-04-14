@@ -2152,6 +2152,15 @@ Expression PrimaryPrefix():
 	  "." 
 	  [ typeArgs = TypeArguments() {line=((Type)typeArgs.get(0)).getBeginLine(); column=((Type)typeArgs.get(0)).getBeginColumn();} ]
 	  <IDENTIFIER> { name = token.image; if (line==-1) { line=token.beginLine; column=token.beginColumn; } }
+
+	  [ args = Arguments() {hasArgs=true;} ] [yield = Block() {hasYield=true;}]
+	  	{
+	  		ret = hasArgs || (hasYield && hasArgs) 
+	  			? new MethodCallExpr(line, column, ret, typeArgs, name, args, yield)
+	  			: new FieldAccessExpr(line, column, ret, null, name);
+	  	}
+
+	  /*
 	  [ args = Arguments() {hasArgs=true;} [yield = Block() {hasYield = true;}] ]
 	  	{
 	  	  if(hasArgs && hasYield)
@@ -2168,7 +2177,11 @@ Expression PrimaryPrefix():
 	  		//ret = hasArgs 
 	  			//? new MethodCallExpr(line, column, ret, typeArgs, name, args)
 	  			//: new FieldAccessExpr(line, column, ret, null, name);
-	  	}
+
+	  			
+	   }
+
+	   */
 	|
 	  "(" {line=token.beginLine; column=token.beginColumn;} ret = Expression() ")" { ret = new EnclosedExpr(line, column, ret); }
 	|
@@ -2178,6 +2191,15 @@ Expression PrimaryPrefix():
 	  type = ResultType() "." "class" { ret = new ClassExpr(type.getBeginLine(), type.getBeginColumn(), type); }
 	|
 	  	<IDENTIFIER> { name = token.image; line=token.beginLine; column=token.beginColumn; }
+
+	  	[ args = Arguments() {hasArgs=true;} ] [yield = Block() {hasYield=true;}]
+	  	{
+	  		ret = hasArgs || (hasYield && hasArgs)
+	  			? new MethodCallExpr(line, column, null, null, name, args,yield)
+	  			: new NameExpr(line, column, name);
+	  	}
+
+		/*
 	  	[ args = Arguments() {hasArgs=true;} [yield = Block(){hasYield = true;}] ]
 	  	
 	  	{
@@ -2190,6 +2212,8 @@ Expression PrimaryPrefix():
 	  			//? new MethodCallExpr(line, column, null, null, name, args,yield)
 	  			//: new NameExpr(line, column, name);
 	  	}
+
+	  	*/
   )
   { return ret; }
 }
@@ -2232,6 +2256,15 @@ Expression PrimarySuffixWithoutSuper(Expression scope):
 	  	LOOKAHEAD( [ TypeArguments() ] <IDENTIFIER> )
 	  	[ typeArgs = TypeArguments() {line=((Type)typeArgs.get(0)).getBeginLine(); column=((Type)typeArgs.get(0)).getBeginColumn();} ] 
 	  	<IDENTIFIER> { name = token.image; if (line==-1) { line=token.beginLine; column=token.beginColumn; } }
+
+		[ args = Arguments() {hasArgs=true;} ] [yield = Block() {hasYield=true;}]
+	  	{
+	  		ret = hasArgs || (hasYield && hasArgs) 
+	  			? new MethodCallExpr(line, column, scope, typeArgs, name, args, yield)
+	  			: new FieldAccessExpr(line, column, scope, typeArgs, name);
+	  	}
+
+		/*
 	  	[ args = Arguments() {hasArgs=true;} [yield = Block(){hasYield = true;}]  ]
 	  	
 	  	{
@@ -2250,6 +2283,7 @@ Expression PrimarySuffixWithoutSuper(Expression scope):
 	  			//? new MethodCallExpr(line, column, scope, typeArgs, name, args)
 	  			//: new FieldAccessExpr(line, column, scope, typeArgs, name);
 	  	}
+	  	*/
 	)
 	|
 	  "[" {line=token.beginLine; column=token.beginColumn;} ret = Expression() "]" { ret = new ArrayAccessExpr(line, column, scope, ret); }

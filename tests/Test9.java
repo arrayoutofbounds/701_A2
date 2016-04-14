@@ -1,11 +1,11 @@
 public class Test9 {
 
-    public void foo(Runnable r) {
+    public void foo() {
     }
 
     class Foo {
 
-        public void foo(Runnable r) {
+        public void foo() {
         }
     }
 }

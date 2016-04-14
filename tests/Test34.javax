@@ -11,7 +11,7 @@ public class Test34 {
 	
 	private void foo(int a) {
 		a = 2;
-		//System.out.println(a);
+		//System.out.println("hey");
 	}
 	
 }

@@ -702,6 +702,17 @@ public final class SetYieldVisitor implements VoidVisitor<Object> {
 	public void visit(MethodCallExpr n, Object arg) {
 		currentMethodCall = n;
 		
+		if(n.getYield() != null) {
+		n.getYield().accept(this, arg);
+		}
+		
+		/*
+		if(n.getYield() != null) {
+			System.out.println(n.getYield().getIsBlock() + " on line " + n.getBeginLine() + " setYield visitor");
+			System.out.println((n.getYield() instanceof BlockStmt) + " on line " + n.getBeginLine() + " setYield visitor");
+		}
+		*/
+		
 		if (n.getScope() != null) {
 			n.getScope().accept(this, arg);
 			printer.print(".");

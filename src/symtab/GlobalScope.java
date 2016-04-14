@@ -2,6 +2,8 @@ package symtab;
 
 import java.util.HashMap;
 
+import japa.parser.ast.body.Parameter;
+
 public class GlobalScope extends BaseScope {
 	
 	private HashMap<String,Symbol> symbols = new HashMap<String,Symbol>();
@@ -20,7 +22,9 @@ public class GlobalScope extends BaseScope {
 		//TODO add String. This goes into the overloaded constructor where a enclosing scope is not given
 		define(new ClassSymbol("String"));
 		define(new ClassSymbol("System.out"));
-		define(new MethodSymbol("println", (symtab.Type)(resolve("void")) ));
+		define(new MethodSymbol("println", (symtab.Type)(resolve("void"))));
+
+		
 		//test if its a void type System.out.println((symtab.Type)(resolve("void")) instanceof symtab.Type);
 	}
 	

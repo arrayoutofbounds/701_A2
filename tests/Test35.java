@@ -4,11 +4,12 @@ public class Test35 {
 
     public Test35() {
         a = 1;
-        foo(new Runnable(){
+        {
+            int a = 1;
+        }foo(new Runnable(){
         @Override
         public void run(){ 
-            int a = 1;
-        }
+            int a = 1;}
         }
         , a);
     }

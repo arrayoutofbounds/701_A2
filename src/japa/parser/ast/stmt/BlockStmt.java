@@ -34,11 +34,22 @@ public final class BlockStmt extends Statement {
     private final List<Statement> stmts;
     
     private boolean isYieldBlock;
+    
+    private boolean isBlock;
 
     public BlockStmt(int beginLine, int beginColumn, int endLine, int endColumn, List<Statement> stmts) {
         super(beginLine, beginColumn, endLine, endColumn);
         this.stmts = stmts;
     }
+    
+    public void setIsBlock(boolean b) {
+    	this.isBlock = b;
+    }	
+    
+    public boolean getIsBlock() {
+    	return this.isBlock;
+    }
+    
     
     public void setIsYieldBlock(boolean b) {
     	this.isYieldBlock = b;
