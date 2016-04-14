@@ -611,6 +611,8 @@ public final class ResolvingVisitor implements VoidVisitor<Object> {
 					//System.out.println(init.toString().split("new")[1].substring(0, i).trim());
 
 					sym = currentScope.resolve(init.toString().split("new")[1].substring(0, i).trim());
+				}else if(init.getClass() == BinaryExpr.class) {
+
 				}
 
 				else{

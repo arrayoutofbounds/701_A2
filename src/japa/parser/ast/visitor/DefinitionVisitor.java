@@ -1214,12 +1214,10 @@ public final class DefinitionVisitor implements VoidVisitor<Object> {
 				//System.out.println(currentScope.getEnclosingScope().getScopeName());
 				//System.out.println(currentScope.getEnclosingScope().getEnclosingScope().getScopeName());
 				VariableSymbol variableSymbol = (symtab.VariableSymbol)currentScope.getEnclosingScope().resolveThisScopeOnly(varName);
-				
+				if(variableSymbol != null) {
+					throw new A2SemanticsException("Sorry the variable " + varName + " on line " + v.getBeginLine() + " has already been defined in the local scope above"); 
+				}
 
-					if(variableSymbol != null) {
-						throw new A2SemanticsException("Sorry the variable " + varName + " on line " + v.getBeginLine() + " has already been defined in the local scope above"); 
-					}
-				
 			}
 
 			// check to see if already in the current scope
