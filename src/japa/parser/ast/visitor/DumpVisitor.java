@@ -702,8 +702,18 @@ public final class DumpVisitor implements VoidVisitor<Object> {
 		currentMethodCall = n;
 		
 		if(n.getYield() != null) {
-		n.getYield().accept(this, arg);
+			
+			List<Statement> statements = n.getYield().getStmts();
+			
+			for(Statement s : statements) {
+				if(s.toString().contains("yield;")) {
+					throw new A2SemanticsException("Cannot put yield inside a yield block. Error at line " + n.getYield().getBeginLine());
+				}
+			}
+			
+			n.getYield().accept(this, arg);
 		}
+		
 		
 		/*
 		if(n.getYield() != null) {

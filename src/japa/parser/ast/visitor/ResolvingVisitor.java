@@ -940,24 +940,26 @@ public final class ResolvingVisitor implements VoidVisitor<Object> {
 		}
 	}
 
+
 	// Make sure that when method is called, the number of arguments and their types match up
 	public void visit(MethodCallExpr n, Object arg) {
-		
+
 		/*
 		if(n.getYield() != null) {
 			System.out.println(n.getYield().getIsBlock() + " on line " + n.getBeginLine() + " resolving visitor");
 			System.out.println((n.getYield() instanceof BlockStmt) + " on line " + n.getBeginLine() + " resolving visitor");
 		}
-		*/
+		 */
 
 		//if(n.getYield() != null) {
 		//System.out.println(n.getYield());
 		//}
 
 		currentScope = n.getThisNodeScope();
-		
+
+
 		if(n.getYield() != null) {
-		n.getYield().accept(this, arg);
+			n.getYield().accept(this, arg);
 		}
 
 		//System.out.println(n.getArgs() + " called on " + n.getBeginLine());
@@ -1359,9 +1361,9 @@ public final class ResolvingVisitor implements VoidVisitor<Object> {
 	}
 
 	public void visit(BlockStmt n, Object arg) {
-		
+
 		//System.out.println(n + " on line " + n.getBeginLine());
-		
+
 		printer.printLn("{");
 		if (n.getStmts() != null) {
 			printer.indent();

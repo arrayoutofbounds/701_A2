@@ -110,6 +110,7 @@ import japa.parser.ast.type.ReferenceType;
 import japa.parser.ast.type.Type;
 import japa.parser.ast.type.VoidType;
 import japa.parser.ast.type.WildcardType;
+import se701.A2SemanticsException;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -1352,6 +1353,10 @@ public final class SetYieldVisitor implements VoidVisitor<Object> {
 	public void visit(YieldStmt n, Object arg) {
 		// TODO Auto-generated method stub
 		//System.out.println("already called");
+		
+		if(currentMethodDeclaration == null) {
+			throw new A2SemanticsException("Cannot place yield at line " + n.getBeginLine() + " as it is not called alongside/on a method.");
+		}
 		
 		currentMethodDeclaration.setIsYield(true);
 		
